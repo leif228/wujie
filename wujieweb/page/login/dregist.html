@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>注册</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+						<!-- <div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+							<input type="text" v-model="username" name="username" id="LAY-user-login-username" maxlength="16" lay-verify="required"
+							 placeholder="用户名" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+							<input type="password" v-model="password" name="password" id="LAY-user-login-password" maxlength="16" lay-verify="required"
+							 placeholder="密码" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password2"></label>
+							<input type="password" v-model="password2" name="password2" id="LAY-user-login-password2" maxlength="16"
+							 lay-verify="required" placeholder="确认密码" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-idcard"></label>
+							<input type="text" v-model="idcard" name="idcard" id="LAY-user-login-idcard" maxlength="18" lay-verify="required"
+							 placeholder="身份证号码" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-pause" for="LAY-user-login-phone"></label>
+							<input type="number" v-model="phone" name="phone" id="LAY-user-login-phone" max="99999999999" lay-verify="required"
+							 placeholder="电话号码" class="layui-input">
+						</div> -->
+						<!-- <div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-edit" for="LAY-user-login-addr"></label>
+							<input type="text" v-model="addr" name="addr" id="LAY-user-login-addr" maxlength="100" lay-verify="required"
+							 placeholder="地址" class="layui-input">
+						</div> -->
+						<!-- <div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-type"></label>
+							<select id="LAY-user-login-type" v-model="userSelected" @change="getuserSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in userList">{{coupon.name}}</option>
+							</select>
+						</div> -->
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-devicetype"></label>
+							<select id="LAY-user-login-devicetype" v-model="deviceSelected" @change="getDeviceSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in deviceList">{{coupon.name}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item" id="nodeDiv">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-node"></label>
+							<select id="LAY-user-login-node" v-model="nodeSelected" @change="getNodeSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in nodeList">{{coupon.name}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
+							<input type="text" v-model="deviceName" name="deviceName" id="LAY-user-login-deviceName" maxlength="18"
+							 lay-verify="required" placeholder="设备名称" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-ip"></label>
+							<input type="text" v-model="ip" name="ip" id="LAY-user-login-ip" maxlength="18" lay-verify="required"
+							 placeholder="ip" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-port"></label>
+							<input type="text" v-model="port" name="port" id="LAY-user-login-port" maxlength="18" lay-verify="required"
+							 placeholder="port" class="layui-input">
+						</div>
+						<!-- <div class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs7">
+									<label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+									<input type="text" v-model="vercode" maxlength="4" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="图形验证码" class="layui-input">
+								</div>
+								<div class="layui-col-xs5">
+									<div style="margin-left: 10px;">
+										<img @click="getVerifyCode" :src="verifyCode" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">注 册</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toIndex">主 页</button>
+						</div>
+
+
+					</div>
+					<div v-show="operatingBool" class="layadmin-user-login-box layadmin-user-login-footer" style="display: none;">
+						<div class="layui-form-item">
+							<label class="layui-form-label">ip：</label>
+							<div class="layui-input-block">
+								<el-input required v-model="preip"></el-input>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">port：</label>
+							<div class="layui-input-block">
+								<el-input required v-model="preport"></el-input>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">fzwno：</label>
+							<div class="layui-input-block">
+								<el-input required v-model="fzwno"></el-input>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#login',
+				data: {
+					// verifyCode: null, // 验证码图片
+					
+					operatingBool: false,
+					preip: "",
+					preport: "",
+					fzwno: "",
+					userId: '',
+					deviceList: [{
+							id: 0,
+							name: '通用服务器'
+						},
+						{
+							id: 1,
+							name: '网关'
+						}
+					],
+					deviceSelected: '',
+					deviceName: '',
+					ip: '',
+					port: '',
+					nodeList: [],
+					nodeSelected: ''
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
+					// this.userSelected = this.userList[0].id;
+					this.deviceSelected = this.deviceList[0].id;
+
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
+				},
+				mounted() {
+					let that = this;
+					// this.getVerifyCode();
+					this.getChildNodes();
+				},
+				methods: {
+					// 获取图片验证码
+					/* getVerifyCode(){
+						api.getVerifyCode()
+						.then((res) => {
+							if(res.code == 0){
+								this.verifyCode = res.result;
+							}
+						}).catch((err) => {
+							layer.msg(err.errorMessage);
+						});
+					}, */
+					getChildNodes() {
+						api.getChildNodes({
+							data: {
+								'nodeId': 1
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.nodeList = res.data;
+									this.nodeSelected = this.nodeList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getuserSelected() {
+						//获取选中的优惠券
+						console.log(this.userSelected)
+						// layer.msg(this.userSelected);
+					},
+					toIndex() {
+						//获取选中的优惠券
+						window.location.href = './index.html';
+						// layer.msg(this.userSelected);
+					},
+					getDeviceSelected() {
+						//获取选中的优惠券
+						console.log(this.deviceSelected)
+						if (this.deviceSelected == 1) {
+							var div = document.getElementById("nodeDiv")
+							div.style = 'display:none;';
+						} else {
+							var div = document.getElementById("nodeDiv")
+							div.style = 'display:block;';
+						}
+					},
+					getNodeSelected() {
+						//获取选中的优惠券
+						console.log(this.nodeSelected)
+						// layer.msg(this.userSelected);
+					},
+					// 登陆 
+					toLogin() {
+
+						if (this.deviceSelected == 0 && !this.nodeSelected) {
+							errMsg("请选择上一级节点")
+							return;
+						}
+						if (!this.deviceName) {
+							errMsg("请输入设备名称")
+							return;
+						}
+						if (!this.ip) {
+							errMsg("请输入ip")
+							return;
+						}
+						if (!this.port) {
+							errMsg("请输入port")
+							return;
+						}
+
+						api.deviceRegist({
+							data: {
+								'userId': this.userId,
+								'deviceSelected': this.deviceSelected,
+								'deviceName': this.deviceName,
+								'ip': this.ip,
+								'port': this.port,
+								'nodeId': this.nodeSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg('注册成功');
+								this.operatingBool = true;
+								this.preip = res.data.ip;
+								this.preport = res.data.port;
+								this.fzwno = res.data.fzwno;
+								// localStorage.setItem("sessionToken", res.data.userInfo)
+								// localStorage.setItem("token", res.data.token)
+								// sessionStorage.setItem("sessionToken", res.data.userInfo);
+								// sessionStorage.setItem("token", res.data.token);
+								// window.location.href = './index.html';
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+				},
+			});
+		</script>
+	</body>
+</html>

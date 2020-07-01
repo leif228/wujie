@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>登录</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
+							<input type="text" v-model="username" name="username" id="LAY-user-login-username" maxlength="16" lay-verify="required"
+							 placeholder="用户名" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
+							<input type="password" v-model="password" name="password" id="LAY-user-login-password" maxlength="16" lay-verify="required"
+							 placeholder="密码" class="layui-input">
+						</div>
+						
+						<!-- <div class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs7">
+									<label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
+									<input type="text" v-model="vercode" maxlength="4" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="图形验证码" class="layui-input">
+								</div>
+								<div class="layui-col-xs5">
+									<div style="margin-left: 10px;">
+										<img @click="getVerifyCode" :src="verifyCode" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
+									</div>
+								</div>
+							</div>
+						</div> -->
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">登 录</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toRegist">注 册</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#login',
+				data: {
+					verifyCode: null, // 验证码图片
+					username: '', // 用户名
+					password: ''// 密码
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
+					// this.userSelected = this.userList[0].id;
+					// this.deviceSelected = this.deviceList[0].id;
+				},
+				mounted() {
+					let that = this;
+					// this.getVerifyCode();
+				},
+				methods: {
+					// 获取图片验证码
+					/* getVerifyCode(){
+						api.getVerifyCode()
+						.then((res) => {
+							if(res.code == 0){
+								this.verifyCode = res.result;
+							}
+						}).catch((err) => {
+							layer.msg(err.errorMessage);
+						});
+					}, */
+					toRegist(){
+						window.location.href = './uregist.html';
+					},
+					
+					// 登陆 
+					toLogin() {
+
+						if (!this.username) {
+							errMsg("请输入用户名")
+							return;
+						}
+						if (!this.password ) {
+							errMsg("请输入密码")
+							return;
+						}
+						
+						// if (!this.addr || this.addr.length < 11) {
+						// 	errMsg("地址")
+						// 	return;
+						// }
+						/* if(!this.vercode ||  this.vercode.length < 4){
+							errMsg("请输入验证码")
+							return;
+						} */
+						api.login({
+							data: {
+								'username': this.username,
+								'password': this.password
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg('成功');
+								// localStorage.setItem("sessionToken", res.data.userInfo)
+								localStorage.setItem("sessionToken", JSON.stringify(res.data.user));
+								localStorage.setItem("token", res.data.token)
+								// sessionStorage.setItem("sessionToken", res.data.userInfo);
+								// sessionStorage.setItem("token", res.data.token);
+								window.location.href = './index.html';
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+				},
+			});
+		</script>
+	</body>
+</html>

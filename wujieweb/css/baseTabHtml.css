@@ -1,0 +1,83 @@
+.layui-fluid {
+	padding: 15px;
+}
+
+/* 图片上传DIV */
+.imgUploadDiv {
+	display: inline-block;
+	position: relative;
+	margin-right: 20px;
+}
+
+/* 图片上传DIV 删除图标 */
+.imgUploadDel {
+	font-size: 24px;
+	position: absolute;
+	z-index: 10;
+	top: -5px;
+	right: -5px;
+	color: red;
+	background-color: #fff;
+	border-radius: 50%;
+}
+
+/* 超出部分换行 */
+.feed_line{white-space: pre-wrap;word-break: break-all;}
+/* 显示一行超出部分隐藏并显示省略号 */
+.over_line_1{overflow: hidden;text-overflow: ellipsis;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;}
+/* 显示两行超出部分隐藏并显示省略号 */
+.over_line_2{overflow: hidden;text-overflow: ellipsis;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 2;}
+/* 清除浮动(用于父级) */
+.clearfix:after{visibility: hidden;display: block;font-size: 0;content: " ";clear: both;height: 0;}
+.clearfix{*zoom: 1;}
+
+/* ==================== felx ==================== */
+/* 父元素-横向排列（主轴） */
+.flex-h {
+  display: flex;
+  flex-direction: row;
+}
+/* 父元素-纵向排列（主轴） */
+.flex-v {
+	display: flex;
+	flex-direction: column;
+}
+/* 子元素-平均分栏 */
+.flex1 {
+  flex: 1;
+}
+/* 父元素-水平居中（主轴是横向才生效） */
+.flex-hc {
+	justify-content: center;
+}
+/* 父元素-竖直居中（主轴是横向才生效） */
+.flex-vc {
+	align-items: center;
+}
+/* 父元素-水平及竖向同时居中 */
+.flex-hc-vc {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+/* 父元素-横向换行 */
+.flex-hw {
+	flex-wrap: wrap;
+}
+.flex-vfs {
+	align-items: flex-start;
+}
+.flex-vs {
+	align-items: stretch;
+}
+/* 两端对齐，项目之间的间隔都相等 */
+.flex-hsb {
+	justify-content: space-between;
+}
+.flex-hsa {
+	justify-content: space-around;
+}
+.flex-vac {
+  align-content: space-between;
+}

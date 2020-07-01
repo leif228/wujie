@@ -1,0 +1,97 @@
+/* 菜单tab */
+
+.menu-tabs{
+	position: fixed;
+	top: 60px;
+	right: 0;
+	height: 40px;
+    line-height: 40px;
+    padding: 0 80px 0 40px;
+    background-color: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+	z-index: 999;
+	left: 0px;
+}
+.menu-tabs-left{
+	left: 200px;
+}
+
+.menu-tabs .layui-icon-next {
+    right: 40px;
+}
+.menu-tabs .layui-icon-prev {
+    left: 0;
+    border-left: none;
+    border-right: 1px solid #f6f6f6;
+}
+.menu-tabs .layadmin-tabs-control {
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: all .3s;
+    -webkit-transition: all .3s;
+    box-sizing: border-box;
+    border-left: 1px solid #f6f6f6;
+}
+.menu-tabs .layui-icon-down {
+    right: 0;
+}
+.layadmin-tabs-select.layui-nav {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: 0 0;
+}
+.menu-tabs .layui-tab {
+    margin: 0;
+    overflow: hidden;
+}
+
+.menu-tabs .layui-tab-title {
+    height: 40px;
+    border: none;
+}
+
+.menu-tabs .layui-tab-title li.layui-this, .menu-tabs .layui-tab-title li:hover {
+    background-color: #f6f6f6;
+}
+
+.menu-tabs .layui-nav-child-tabShow{
+	top: 20px;
+	left: -100px;
+}
+/* 菜单tab */
+
+
+
+
+/* 主体内容 */
+
+.layui-layout-admin .subject-body-left{
+	left: 0px;
+}
+.layui-layout-admin .layui-body .layadmin-tabsbody-item {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+.layadmin-iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+/* 主体内容 */

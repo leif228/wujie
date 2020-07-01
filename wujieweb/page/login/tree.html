@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<!-- item template -->
+		<script type="text/x-template" id="item-template">
+			<li>
+		        <div :class="{bold: isFolder}"
+		          @click="toggle"
+		          @dblclick="makeFolder">
+		          {{ item.name }}
+		          <span v-if="isFolder">[{{ isOpen ? '-' : '+' }}]</span>
+		        </div>
+		        <ul v-show="isOpen" v-if="isFolder">
+		          <tree-item
+		            class="item"
+		            v-for="(child, index) in item.children"
+		            :key="index"
+		            :item="child"
+		            @make-folder="$emit('make-folder', $event)"
+		            @add-item="$emit('add-item', $event)"
+		          ></tree-item>
+		          
+		        </ul>
+		      </li>
+		    </script>
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>服务节点树</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+						<!-- the demo root element -->
+						<ul id="demo">
+							<tree-item class="item" :item="treeData" @make-folder="makeFolder"></tree-item>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			// demo data
+			var treeData = {
+				name: "root",
+				children: [{
+						name: "重庆",
+						children: []
+					},
+					{
+						name: "广东",
+						children: [{
+								name: "广州",
+								children: [{
+									name: "天河",
+									children: []
+								}, {
+									name: "黄埔",
+									children: []
+								}]
+							},
+							{
+								name: "深圳",
+								children: []
+							},
+							{
+								name: "中山",
+								children: [{
+									name: "中山一区"
+								}, {
+									name: "中山二区"
+								}]
+							}
+						]
+					}
+				]
+			};
+			// define the tree-item component
+			Vue.component("tree-item", {
+				template: "#item-template",
+				props: {
+					item: Object
+				},
+				data: function() {
+					return {
+						isOpen: false
+					};
+				},
+				computed: {
+					isFolder: function() {
+						return this.item.children && this.item.children.length;
+					}
+				},
+				methods: {
+					toggle: function() {
+						if (this.isFolder) {
+							this.isOpen = !this.isOpen;
+						}
+					},
+					makeFolder: function() {
+						if (!this.isFolder) {
+							this.$emit("make-folder", this.item);
+							this.isOpen = true;
+						}
+					}
+				}
+			});
+			new Vue({
+				el: '#login',
+				data: {
+					treeData: treeData
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
+					// this.userSelected = this.userList[0].id;
+					// this.deviceSelected = this.deviceList[0].id;
+				},
+				mounted() {
+					let that = this;
+					// this.getVerifyCode();
+					this.toLogin();
+				},
+				methods: {
+					// 获取图片验证码
+					/* getVerifyCode(){
+						api.getVerifyCode()
+						.then((res) => {
+							if(res.code == 0){
+								this.verifyCode = res.result;
+							}
+						}).catch((err) => {
+							layer.msg(err.errorMessage);
+						});
+					}, */
+					toRegist() {
+						// window.location.href = './uregist.html';
+					},
+					makeFolder(item) {
+						Vue.set(item, "children", []);
+						this.addItem(item);
+					},
+					// addItem(item) {
+					// 	item.children.push({
+					// 		name: "new stuff"
+					// 	});
+					// },
+
+					// 登陆 
+					toLogin() {
+
+						api.getTreeData({
+							data: {
+								'nodeId': 1
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg('成功');
+								this.treeData = res.data;
+								// // localStorage.setItem("sessionToken", res.data.userInfo)
+								// localStorage.setItem("sessionToken", JSON.stringify(res.data.user));
+								// localStorage.setItem("token", res.data.token)
+								// // sessionStorage.setItem("sessionToken", res.data.userInfo);
+								// // sessionStorage.setItem("token", res.data.token);
+								// window.location.href = './index.html';
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+				},
+			});
+		</script>
+	</body>
+</html>
