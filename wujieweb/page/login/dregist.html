@@ -134,6 +134,7 @@
 					// verifyCode: null, // 验证码图片
 					
 					operatingBool: false,
+					currIp: "",
 					preip: "",
 					preport: "",
 					fzwno: "",
@@ -257,6 +258,31 @@
 								this.preip = res.data.ip;
 								this.preport = res.data.port;
 								this.fzwno = res.data.fzwno;
+								// localStorage.setItem("sessionToken", res.data.userInfo)
+								// localStorage.setItem("token", res.data.token)
+								// sessionStorage.setItem("sessionToken", res.data.userInfo);
+								// sessionStorage.setItem("token", res.data.token);
+								// window.location.href = './index.html';
+								this.tcpClientConnect();
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					// 登陆
+					tcpClientConnect() {
+					
+						api.tcpClientConnect({
+							data: {
+								'currIp': this.ip,
+								'ip': this.preip,
+								'port': this.preport,
+								'fzwno': this.fzwno
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
 								// localStorage.setItem("sessionToken", res.data.userInfo)
 								// localStorage.setItem("token", res.data.token)
 								// sessionStorage.setItem("sessionToken", res.data.userInfo);
