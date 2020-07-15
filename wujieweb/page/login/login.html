@@ -115,7 +115,7 @@
 								layer.msg('成功');
 								// localStorage.setItem("sessionToken", res.data.userInfo)
 								localStorage.setItem("sessionToken", JSON.stringify(res.data.user));
-								localStorage.setItem("token", res.data.token)
+								localStorage.setItem("token", res.data.token);
 								// sessionStorage.setItem("sessionToken", res.data.userInfo);
 								// sessionStorage.setItem("token", res.data.token);
 								window.location.href = './index.html';

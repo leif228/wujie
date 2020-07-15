@@ -10,12 +10,17 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-const domain = "http://127.0.0.1:8888";
+const domain = "http://192.168.3.42:8888";
+// const domain = "http://192.168.3.41:8888";
 
 const api = {
 	domain: domain,
-	deviceRegist(reqObj = {}) {
-		reqObj.url = domain + "/deviceRegist";
+	secDeviceRegist(reqObj = {}) {
+		reqObj.url = domain + "/secDeviceRegist";
+		return yajax(reqObj);
+	},
+	preDeviceRegist(reqObj = {}) {
+		reqObj.url = domain + "/preDeviceRegist";
 		return yajax(reqObj);
 	},
 	tcpClientConnect(reqObj = {}) {
@@ -120,6 +125,7 @@ function yajax({
 			});
 		}
 		let token = localStorage.getItem("token");
+		let url_no_token = localStorage.getItem("url_no_token");
 		token = token != "" ? token : '';
 		$.ajax({
 			type: type,
@@ -132,7 +138,11 @@ function yajax({
 				withCredentials: true // 设置运行跨域操作
 			},
 			beforeSend: (XMLHttpRequest) => {
-				XMLHttpRequest.setRequestHeader("Authorization", token);
+				if(url_no_token==0){
+					
+				}else{
+					XMLHttpRequest.setRequestHeader("Authorization", token);
+				}
 			},
 			success(res) {
 				layerIdx ? layer.close(layerIdx) : '';

@@ -52,37 +52,7 @@
 			// demo data
 			var treeData = {
 				name: "root",
-				children: [{
-						name: "重庆",
-						children: []
-					},
-					{
-						name: "广东",
-						children: [{
-								name: "广州",
-								children: [{
-									name: "天河",
-									children: []
-								}, {
-									name: "黄埔",
-									children: []
-								}]
-							},
-							{
-								name: "深圳",
-								children: []
-							},
-							{
-								name: "中山",
-								children: [{
-									name: "中山一区"
-								}, {
-									name: "中山二区"
-								}]
-							}
-						]
-					}
-				]
+				children: []
 			};
 			// define the tree-item component
 			Vue.component("tree-item", {
@@ -101,7 +71,7 @@
 					}
 				},
 				methods: {
-					toggle: function() {
+					toggle: function(value) {
 						if (this.isFolder) {
 							this.isOpen = !this.isOpen;
 						}

@@ -242,7 +242,7 @@
 							return;
 						}
 
-						api.deviceRegist({
+						api.preDeviceRegist({
 							data: {
 								'userId': this.userId,
 								'deviceSelected': this.deviceSelected,
@@ -253,17 +253,49 @@
 							}
 						}).then((res) => {
 							if (res.code == 0) {
-								layer.msg('注册成功');
+								layer.msg(res.msg);
 								this.operatingBool = true;
 								this.preip = res.data.ip;
 								this.preport = res.data.port;
 								this.fzwno = res.data.fzwno;
+																
+								//设置该请求不带token访问，绕过权限认证
+								localStorage.setItem("url_no_token", 0);
+								this.tcpClientConnect();
+								localStorage.setItem("url_no_token", 1);
+								
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					secDeviceRegist(){
+						api.secDeviceRegist({
+							data: {
+								'userId': this.userId,
+								'deviceSelected': this.deviceSelected,
+								'deviceName': this.deviceName,
+								'ip': this.ip,
+								'port': this.port,
+								'nodeId': this.nodeSelected,
+								'fzwno':this.fzwno
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								// this.operatingBool = true;
+								// this.preip = res.data.ip;
+								// this.preport = res.data.port;
+								// this.fzwno = res.data.fzwno;
 								// localStorage.setItem("sessionToken", res.data.userInfo)
 								// localStorage.setItem("token", res.data.token)
 								// sessionStorage.setItem("sessionToken", res.data.userInfo);
 								// sessionStorage.setItem("token", res.data.token);
 								// window.location.href = './index.html';
-								this.tcpClientConnect();
+								// localStorage.setItem("url_no_token", 0);
+								// this.tcpClientConnect();
+								// localStorage.setItem("url_no_token", 1);
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
@@ -283,11 +315,7 @@
 						}).then((res) => {
 							if (res.code == 0) {
 								layer.msg(res.msg);
-								// localStorage.setItem("sessionToken", res.data.userInfo)
-								// localStorage.setItem("token", res.data.token)
-								// sessionStorage.setItem("sessionToken", res.data.userInfo);
-								// sessionStorage.setItem("token", res.data.token);
-								// window.location.href = './index.html';
+								this.secDeviceRegist();
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
