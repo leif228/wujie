@@ -10,7 +10,7 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-const domain = "http://192.168.3.42:8888";
+const domain = "http://192.168.3.41:8888";
 // const domain = "http://192.168.3.41:8888";
 
 const api = {
@@ -25,6 +25,10 @@ const api = {
 	},
 	tcpClientConnect(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/tcpClientConnect";
+		return yajax(reqObj);
+	},
+	getTcpClientConnectInfo(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/getTcpClientConnectInfo";
 		return yajax(reqObj);
 	},
 	getChildNodes(reqObj = {}) {

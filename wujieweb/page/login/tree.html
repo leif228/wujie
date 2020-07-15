@@ -10,6 +10,7 @@
 		<script type="text/x-template" id="item-template">
 			<li>
 		        <div :class="{bold: isFolder}"
+					:id= item.fzwno
 		          @click="toggle"
 		          @dblclick="makeFolder">
 		          {{ item.name }}
@@ -73,6 +74,9 @@
 				methods: {
 					toggle: function(value) {
 						if (this.isFolder) {
+							if (!this.isOpen) {
+								getTcpClientConnectInfo(this.item);
+							}
 							this.isOpen = !this.isOpen;
 						}
 					},
@@ -84,6 +88,46 @@
 					}
 				}
 			});
+
+			function getTcpClientConnectInfo(item) {
+				layer.msg(item.ip);
+
+				//设置该请求不带token访问，绕过权限认证
+				localStorage.setItem("url_no_token", 0);
+
+				api.getTcpClientConnectInfo({
+					data: {
+						'currIp': item.ip
+					}
+				}).then((res) => {
+					if (res.code == 0) {
+						// layer.msg(res.msg);
+						var fzwnos = res.msg;
+						var fzwnoarr;
+						if (fzwnos && fzwnos != "") {
+							if (fzwnos.indexOf(",") != -1) {
+								fzwnoarr = fzwnos.split(',');
+							} else {
+								fzwnoarr = new Array;
+								fzwnoarr[0] = fzwnos;
+							}
+						}
+						if (fzwnoarr) {
+							for (j = 0, len = fzwnoarr.length; j < len; j++) {
+								var tabId = document.getElementById(fzwnoarr[j]);
+								tabId.style.color = "green";
+							}
+						}
+
+
+					}
+					localStorage.setItem("url_no_token", 1);
+				}).catch((err) => {
+					layer.msg(err.msg);
+					localStorage.setItem("url_no_token", 1);
+					// this.getVerifyCode();
+				});
+			};
 			new Vue({
 				el: '#login',
 				data: {
@@ -111,9 +155,7 @@
 							layer.msg(err.errorMessage);
 						});
 					}, */
-					toRegist() {
-						// window.location.href = './uregist.html';
-					},
+
 					makeFolder(item) {
 						Vue.set(item, "children", []);
 						this.addItem(item);
