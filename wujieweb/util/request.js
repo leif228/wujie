@@ -10,11 +10,27 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
+// const domain = "http://192.168.1.41:8888";
 const domain = "http://192.168.3.41:8888";
-// const domain = "http://192.168.3.41:8888";
 
 const api = {
 	domain: domain,
+	addrInit(reqObj = {}) {
+		reqObj.url = domain + "/addrInit";
+		return yajax(reqObj);
+	},
+	cityByP(reqObj = {}) {
+		reqObj.url = domain + "/cityByP";
+		return yajax(reqObj);
+	},
+	areaByC(reqObj = {}) {
+		reqObj.url = domain + "/areaByC";
+		return yajax(reqObj);
+	},
+	streetByA(reqObj = {}) {
+		reqObj.url = domain + "/streetByA";
+		return yajax(reqObj);
+	},
 	secDeviceRegist(reqObj = {}) {
 		reqObj.url = domain + "/secDeviceRegist";
 		return yajax(reqObj);
