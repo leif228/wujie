@@ -10,8 +10,8 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-// const domain = "http://192.168.1.41:8888";
-const domain = "http://192.168.3.41:8888";
+const domain = "http://192.168.1.41:8888";
+// const domain = "http://192.168.3.41:8888";
 
 const api = {
 	domain: domain,

@@ -23,14 +23,14 @@
 								<option :value="coupon.id" v-for="coupon in deviceList">{{coupon.name}}</option>
 							</select>
 						</div>
-						<div class="layui-form-item" id="nodeDiv">
+						<div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-node"></label>
 							<select id="LAY-user-login-node" v-model="nodeSelected" @change="getNodeSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
 								<option :value="coupon.id" v-for="coupon in nodeList">{{coupon.name}}</option>
 							</select>
 						</div>
 
-						<div class="layui-form-item">
+						<!-- <div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-p"></label>
 							<select id="LAY-user-login-p" v-model="pSelected" @change="getPSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
 								<option :value="coupon.provinceId" v-for="coupon in pList">{{coupon.provinceName}}</option>
@@ -53,22 +53,23 @@
 							<select id="LAY-user-login-s" v-model="sSelected" @change="getSSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
 								<option :value="coupon.streetId" v-for="coupon in sList">{{coupon.streetName}}</option>
 							</select>
-						</div>
-
-						<div class="layui-form-item">
-							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
-							<input type="text" v-model="deviceName" name="deviceName" id="LAY-user-login-deviceName" maxlength="18"
-							 lay-verify="required" placeholder="设备名称" class="layui-input">
-						</div>
-						<div class="layui-form-item">
-							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-ip"></label>
-							<input type="text" v-model="ip" name="ip" id="LAY-user-login-ip" maxlength="18" lay-verify="required"
-							 placeholder="ip" class="layui-input">
-						</div>
-						<div class="layui-form-item">
-							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-port"></label>
-							<input type="text" v-model="port" name="port" id="LAY-user-login-port" maxlength="18" lay-verify="required"
-							 placeholder="port" class="layui-input">
+						</div> -->
+						<div id="nodeDiv">
+							<div class="layui-form-item">
+								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
+								<input type="text" v-model="deviceName" name="deviceName" id="LAY-user-login-deviceName" maxlength="18"
+								 lay-verify="required" placeholder="设备名称" class="layui-input">
+							</div>
+							<div class="layui-form-item">
+								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-ip"></label>
+								<input type="text" v-model="ip" name="ip" id="LAY-user-login-ip" maxlength="18" lay-verify="required"
+								 placeholder="ip" class="layui-input">
+							</div>
+							<div class="layui-form-item">
+								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-port"></label>
+								<input type="text" v-model="port" name="port" id="LAY-user-login-port" maxlength="18" lay-verify="required"
+								 placeholder="port" class="layui-input">
+							</div>
 						</div>
 
 						<div class="layui-form-item">
@@ -141,10 +142,10 @@
 					aSelected: '',
 					sList: [],
 					sSelected: '',
-					pSort:'',
-					cSort:'',
-					aSort:'',
-					sSort:''
+					pSort: '',
+					cSort: '',
+					aSort: '',
+					sSort: ''
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
@@ -158,7 +159,7 @@
 					let that = this;
 					// this.getVerifyCode();
 					this.getChildNodes();
-					this.addrInit();
+					// this.addrInit();
 				},
 				methods: {
 					getChildNodes() {
@@ -179,8 +180,7 @@
 					},
 					addrInit() {
 						api.addrInit({
-							data: {
-							}
+							data: {}
 						}).then((res) => {
 							if (res.code == 0) {
 								if (res.data.bsp.length > 0) {
@@ -190,17 +190,17 @@
 								}
 								if (res.data.bsc.length > 0) {
 									this.cList = res.data.bsc;
-									this.cSelected = this.cList[0].cityId;									
+									this.cSelected = this.cList[0].cityId;
 									this.cSort = this.cList[0].sort;
 								}
 								if (res.data.bsa.length > 0) {
 									this.aList = res.data.bsa;
-									this.aSelected = this.aList[0].areaId;								
+									this.aSelected = this.aList[0].areaId;
 									this.aSort = this.aList[0].sort;
 								}
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;									
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -216,12 +216,13 @@
 					getDeviceSelected() {
 						//获取选中的优惠券
 						console.log(this.deviceSelected)
-						if (this.deviceSelected == 1) {
-							var div = document.getElementById("nodeDiv")
-							div.style = 'display:none;';
-						} else {
+						if (this.deviceSelected == 0) {
+
 							var div = document.getElementById("nodeDiv")
 							div.style = 'display:block;';
+						} else {
+							var div = document.getElementById("nodeDiv")
+							div.style = 'display:none;';
 						}
 					},
 					getNodeSelected() {
@@ -233,9 +234,9 @@
 						//获取选中的优惠券
 						console.log(this.pSelected)
 						var arr = this.pList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.pSelected == arr[j].provinceId){
+								if (this.pSelected == arr[j].provinceId) {
 									this.pSort = arr[j].sort;
 									break;
 								}
@@ -245,13 +246,13 @@
 						this.cSort = '';
 						this.aSort = '';
 						this.sSort = '';
-						
+
 						api.cityByP({
 							data: {
-								'id':this.pSelected
+								'id': this.pSelected
 							}
 						}).then((res) => {
-							if (res.code == 0) {								
+							if (res.code == 0) {
 								if (res.data.bsc.length > 0) {
 									this.cList = res.data.bsc;
 									this.cSelected = this.cList[0].cityId;
@@ -259,12 +260,12 @@
 								}
 								if (res.data.bsa.length > 0) {
 									this.aList = res.data.bsa;
-									this.aSelected = this.aList[0].areaId;								
+									this.aSelected = this.aList[0].areaId;
 									this.aSort = this.aList[0].sort;
 								}
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;								
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -276,9 +277,9 @@
 						//获取选中的优惠券
 						console.log(this.cSelected);
 						var arr = this.cList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.cSelected == arr[j].cityId){
+								if (this.cSelected == arr[j].cityId) {
 									this.cSort = arr[j].sort;
 									break;
 								}
@@ -289,18 +290,18 @@
 						this.sSort = '';
 						api.areaByC({
 							data: {
-								'id':this.cSelected
+								'id': this.cSelected
 							}
 						}).then((res) => {
-							if (res.code == 0) {								
+							if (res.code == 0) {
 								if (res.data.bsa.length > 0) {
 									this.aList = res.data.bsa;
-									this.aSelected = this.aList[0].areaId;								
+									this.aSelected = this.aList[0].areaId;
 									this.aSort = this.aList[0].sort;
 								}
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;								
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -312,9 +313,9 @@
 						//获取选中的优惠券
 						console.log(this.aSelected);
 						var arr = this.aList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.aSelected == arr[j].areaId){
+								if (this.aSelected == arr[j].areaId) {
 									this.aSort = arr[j].sort;
 									break;
 								}
@@ -324,13 +325,13 @@
 						this.sSort = '';
 						api.streetByA({
 							data: {
-								'id':this.aSelected
+								'id': this.aSelected
 							}
 						}).then((res) => {
-							if (res.code == 0) {								
+							if (res.code == 0) {
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;								
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -342,9 +343,9 @@
 						//获取选中的优惠券
 						console.log(this.sSelected);
 						var arr = this.sList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.sSelected == arr[j].streetId){
+								if (this.sSelected == arr[j].streetId) {
 									this.sSort = arr[j].sort;
 									break;
 								}
@@ -354,21 +355,24 @@
 					// 登陆 
 					toLogin() {
 
-						if (this.deviceSelected == 0 && !this.nodeSelected) {
+						// if (this.deviceSelected == 0 && !this.nodeSelected) {
+						if (!this.nodeSelected) {
 							errMsg("请选择上一级节点")
 							return;
 						}
-						if (!this.deviceName) {
-							errMsg("请输入设备名称")
-							return;
-						}
-						if (!this.ip) {
-							errMsg("请输入ip")
-							return;
-						}
-						if (!this.port) {
-							errMsg("请输入port")
-							return;
+						if (this.nodeSelected == 0) {
+							if (!this.deviceName) {
+								errMsg("请输入设备名称")
+								return;
+							}
+							if (!this.ip) {
+								errMsg("请输入ip")
+								return;
+							}
+							if (!this.port) {
+								errMsg("请输入port")
+								return;
+							}
 						}
 
 						api.preDeviceRegist({
@@ -379,10 +383,10 @@
 								'ip': this.ip,
 								'port': this.port,
 								'nodeId': this.nodeSelected,
-								'pSort':this.pSort,
-								'cSort':this.cSort,
-								'aSort':this.aSort,
-								'sSort':this.sSort
+								'pSort': this.pSort,
+								'cSort': this.cSort,
+								'aSort': this.aSort,
+								'sSort': this.sSort
 							}
 						}).then((res) => {
 							if (res.code == 0) {
@@ -392,11 +396,12 @@
 								this.preport = res.data.port;
 								this.fzwno = res.data.fzwno;
 
-								//设置该请求不带token访问，绕过权限认证
-								localStorage.setItem("url_no_token", 0);
-								this.tcpClientConnect();
-								localStorage.setItem("url_no_token", 1);
-
+								if (this.nodeSelected == 0) {
+									//设置该请求不带token访问，绕过权限认证
+									localStorage.setItem("url_no_token", 0);
+									this.tcpClientConnect();
+									localStorage.setItem("url_no_token", 1);
+								}
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);

@@ -53,20 +53,33 @@
 							</select>
 						</div>
 						
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-p"></label>
+							<select id="LAY-user-login-p" v-model="pSelected" @change="getPSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.provinceId" v-for="coupon in pList">{{coupon.provinceName}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-c"></label>
+							<select id="LAY-user-login-c" v-model="cSelected" @change="getCSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.cityId" v-for="coupon in cList">{{coupon.cityName}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-a"></label>
+							<select id="LAY-user-login-a" v-model="aSelected" @change="getASelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.areaId" v-for="coupon in aList">{{coupon.areaName}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-s"></label>
+							<select id="LAY-user-login-s" v-model="sSelected" @change="getSSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.streetId" v-for="coupon in sList">{{coupon.streetName}}</option>
+							</select>
+						</div>
 						
-						<!-- <div class="layui-form-item">
-							<div class="layui-row">
-								<div class="layui-col-xs7">
-									<label class="layadmin-user-login-icon layui-icon layui-icon-vercode" for="LAY-user-login-vercode"></label>
-									<input type="text" v-model="vercode" maxlength="4" name="vercode" id="LAY-user-login-vercode" lay-verify="required" placeholder="图形验证码" class="layui-input">
-								</div>
-								<div class="layui-col-xs5">
-									<div style="margin-left: 10px;">
-										<img @click="getVerifyCode" :src="verifyCode" class="layadmin-user-login-codeimg" id="LAY-user-get-vercode">
-									</div>
-								</div>
-							</div>
-						</div> -->
+						
+						
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">注 册</button>
 						</div>
@@ -98,7 +111,20 @@
 							name: '团体'
 						}
 					],
-					userSelected: ''
+					userSelected: '',
+					
+					pList: [],
+					pSelected: '',
+					cList: [],
+					cSelected: '',
+					aList: [],
+					aSelected: '',
+					sList: [],
+					sSelected: '',
+					pSort:'',
+					cSort:'',
+					aSort:'',
+					sSort:''
 					
 				},
 				created() {
@@ -108,20 +134,162 @@
 				},
 				mounted() {
 					let that = this;
-					// this.getVerifyCode();
+					this.addrInit();
 				},
 				methods: {
-					// 获取图片验证码
-					/* getVerifyCode(){
-						api.getVerifyCode()
-						.then((res) => {
-							if(res.code == 0){
-								this.verifyCode = res.result;
+					addrInit() {
+						api.addrInit({
+							data: {
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.bsp.length > 0) {
+									this.pList = res.data.bsp;
+									this.pSelected = this.pList[0].provinceId;
+									this.pSort = this.pList[0].sort;
+								}
+								if (res.data.bsc.length > 0) {
+									this.cList = res.data.bsc;
+									this.cSelected = this.cList[0].cityId;									
+									this.cSort = this.cList[0].sort;
+								}
+								if (res.data.bsa.length > 0) {
+									this.aList = res.data.bsa;
+									this.aSelected = this.aList[0].areaId;								
+									this.aSort = this.aList[0].sort;
+								}
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;									
+									this.sSort = this.sList[0].sort;
+								}
 							}
 						}).catch((err) => {
-							layer.msg(err.errorMessage);
+							layer.msg(err.msg);
 						});
-					}, */
+					},
+					getPSelected() {
+						//获取选中的优惠券
+						console.log(this.pSelected)
+						var arr = this.pList;
+						if(arr.length>0){
+							for (j = 0, len = arr.length; j < len; j++) {
+								if(this.pSelected == arr[j].provinceId){
+									this.pSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+						//初始化
+						this.cSort = '';
+						this.aSort = '';
+						this.sSort = '';
+						
+						api.cityByP({
+							data: {
+								'id':this.pSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {								
+								if (res.data.bsc.length > 0) {
+									this.cList = res.data.bsc;
+									this.cSelected = this.cList[0].cityId;
+									this.cSort = this.cList[0].sort;
+								}
+								if (res.data.bsa.length > 0) {
+									this.aList = res.data.bsa;
+									this.aSelected = this.aList[0].areaId;								
+									this.aSort = this.aList[0].sort;
+								}
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;								
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getCSelected() {
+						//获取选中的优惠券
+						console.log(this.cSelected);
+						var arr = this.cList;
+						if(arr.length>0){
+							for (j = 0, len = arr.length; j < len; j++) {
+								if(this.cSelected == arr[j].cityId){
+									this.cSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+						//初始化
+						this.aSort = '';
+						this.sSort = '';
+						api.areaByC({
+							data: {
+								'id':this.cSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {								
+								if (res.data.bsa.length > 0) {
+									this.aList = res.data.bsa;
+									this.aSelected = this.aList[0].areaId;								
+									this.aSort = this.aList[0].sort;
+								}
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;								
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getASelected() {
+						//获取选中的优惠券
+						console.log(this.aSelected);
+						var arr = this.aList;
+						if(arr.length>0){
+							for (j = 0, len = arr.length; j < len; j++) {
+								if(this.aSelected == arr[j].areaId){
+									this.aSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+						//初始化
+						this.sSort = '';
+						api.streetByA({
+							data: {
+								'id':this.aSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {								
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;								
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getSSelected() {
+						//获取选中的优惠券
+						console.log(this.sSelected);
+						var arr = this.sList;
+						if(arr.length>0){
+							for (j = 0, len = arr.length; j < len; j++) {
+								if(this.sSelected == arr[j].streetId){
+									this.sSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+					},
 					getuserSelected() {
 						//获取选中的优惠券
 						console.log(this.userSelected)
@@ -177,6 +345,10 @@
 								'userSelected': this.userSelected,
 								// 'deviceSelected': this.deviceSelected,
 								// 'deviceName': this.deviceName
+								'pSort':this.pSort,
+								'cSort':this.cSort,
+								'aSort':this.aSort,
+								'sSort':this.sSort
 							}
 						}).then((res) => {
 							if (res.code == 0) {
