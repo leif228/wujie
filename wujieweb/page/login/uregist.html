@@ -52,7 +52,7 @@
 								<option :value="coupon.id" v-for="coupon in userList">{{coupon.name}}</option>
 							</select>
 						</div>
-						
+
 						<div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-p"></label>
 							<select id="LAY-user-login-p" v-model="pSelected" @change="getPSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
@@ -77,13 +77,13 @@
 								<option :value="coupon.streetId" v-for="coupon in sList">{{coupon.streetName}}</option>
 							</select>
 						</div>
-						
-						
-						
+
+
+
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">注 册</button>
 						</div>
-						
+
 					</div>
 				</div>
 			</div>
@@ -112,7 +112,7 @@
 						}
 					],
 					userSelected: '',
-					
+
 					pList: [],
 					pSelected: '',
 					cList: [],
@@ -121,11 +121,11 @@
 					aSelected: '',
 					sList: [],
 					sSelected: '',
-					pSort:'',
-					cSort:'',
-					aSort:'',
-					sSort:''
-					
+					pSort: 0,
+					cSort: 0,
+					aSort: 0,
+					sSort: 0
+
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
@@ -139,8 +139,7 @@
 				methods: {
 					addrInit() {
 						api.addrInit({
-							data: {
-							}
+							data: {}
 						}).then((res) => {
 							if (res.code == 0) {
 								if (res.data.bsp.length > 0) {
@@ -150,17 +149,17 @@
 								}
 								if (res.data.bsc.length > 0) {
 									this.cList = res.data.bsc;
-									this.cSelected = this.cList[0].cityId;									
+									this.cSelected = this.cList[0].cityId;
 									this.cSort = this.cList[0].sort;
 								}
 								if (res.data.bsa.length > 0) {
 									this.aList = res.data.bsa;
-									this.aSelected = this.aList[0].areaId;								
+									this.aSelected = this.aList[0].areaId;
 									this.aSort = this.aList[0].sort;
 								}
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;									
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -172,25 +171,25 @@
 						//获取选中的优惠券
 						console.log(this.pSelected)
 						var arr = this.pList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.pSelected == arr[j].provinceId){
+								if (this.pSelected == arr[j].provinceId) {
 									this.pSort = arr[j].sort;
 									break;
 								}
 							}
 						};
 						//初始化
-						this.cSort = '';
-						this.aSort = '';
-						this.sSort = '';
-						
+						this.cSort = 0;
+						this.aSort = 0;
+						this.sSort = 0;
+
 						api.cityByP({
 							data: {
-								'id':this.pSelected
+								'id': this.pSelected
 							}
 						}).then((res) => {
-							if (res.code == 0) {								
+							if (res.code == 0) {
 								if (res.data.bsc.length > 0) {
 									this.cList = res.data.bsc;
 									this.cSelected = this.cList[0].cityId;
@@ -198,12 +197,12 @@
 								}
 								if (res.data.bsa.length > 0) {
 									this.aList = res.data.bsa;
-									this.aSelected = this.aList[0].areaId;								
+									this.aSelected = this.aList[0].areaId;
 									this.aSort = this.aList[0].sort;
 								}
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;								
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -215,31 +214,32 @@
 						//获取选中的优惠券
 						console.log(this.cSelected);
 						var arr = this.cList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.cSelected == arr[j].cityId){
+								if (this.cSelected == arr[j].cityId) {
 									this.cSort = arr[j].sort;
 									break;
 								}
 							}
 						};
 						//初始化
-						this.aSort = '';
-						this.sSort = '';
+						this.aSort = 0;
+						this.sSort = 0;
+
 						api.areaByC({
 							data: {
-								'id':this.cSelected
+								'id': this.cSelected
 							}
 						}).then((res) => {
-							if (res.code == 0) {								
+							if (res.code == 0) {
 								if (res.data.bsa.length > 0) {
 									this.aList = res.data.bsa;
-									this.aSelected = this.aList[0].areaId;								
+									this.aSelected = this.aList[0].areaId;
 									this.aSort = this.aList[0].sort;
 								}
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;								
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -251,25 +251,25 @@
 						//获取选中的优惠券
 						console.log(this.aSelected);
 						var arr = this.aList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.aSelected == arr[j].areaId){
+								if (this.aSelected == arr[j].areaId) {
 									this.aSort = arr[j].sort;
 									break;
 								}
 							}
 						};
 						//初始化
-						this.sSort = '';
+						this.sSort = 0;
 						api.streetByA({
 							data: {
-								'id':this.aSelected
+								'id': this.aSelected
 							}
 						}).then((res) => {
-							if (res.code == 0) {								
+							if (res.code == 0) {
 								if (res.data.bss.length > 0) {
 									this.sList = res.data.bss;
-									this.sSelected = this.sList[0].streetId;								
+									this.sSelected = this.sList[0].streetId;
 									this.sSort = this.sList[0].sort;
 								}
 							}
@@ -281,9 +281,9 @@
 						//获取选中的优惠券
 						console.log(this.sSelected);
 						var arr = this.sList;
-						if(arr.length>0){
+						if (arr.length > 0) {
 							for (j = 0, len = arr.length; j < len; j++) {
-								if(this.sSelected == arr[j].streetId){
+								if (this.sSelected == arr[j].streetId) {
 									this.sSort = arr[j].sort;
 									break;
 								}
@@ -345,10 +345,10 @@
 								'userSelected': this.userSelected,
 								// 'deviceSelected': this.deviceSelected,
 								// 'deviceName': this.deviceName
-								'pSort':this.pSort,
-								'cSort':this.cSort,
-								'aSort':this.aSort,
-								'sSort':this.sSort
+								'pSort': this.pSort,
+								'cSort': this.cSort,
+								'aSort': this.aSort,
+								'sSort': this.sSort
 							}
 						}).then((res) => {
 							if (res.code == 0) {

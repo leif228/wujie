@@ -19,6 +19,10 @@ const api = {
 		reqObj.url = domain + "/addrInit";
 		return yajax(reqObj);
 	},
+	deviceType(reqObj = {}) {
+		reqObj.url = domain + "/deviceType";
+		return yajax(reqObj);
+	},
 	cityByP(reqObj = {}) {
 		reqObj.url = domain + "/cityByP";
 		return yajax(reqObj);

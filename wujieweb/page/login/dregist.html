@@ -30,7 +30,7 @@
 							</select>
 						</div>
 
-						<!-- <div class="layui-form-item">
+						<div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-p"></label>
 							<select id="LAY-user-login-p" v-model="pSelected" @change="getPSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
 								<option :value="coupon.provinceId" v-for="coupon in pList">{{coupon.provinceName}}</option>
@@ -53,7 +53,8 @@
 							<select id="LAY-user-login-s" v-model="sSelected" @change="getSSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
 								<option :value="coupon.streetId" v-for="coupon in sList">{{coupon.streetName}}</option>
 							</select>
-						</div> -->
+						</div>
+
 						<div id="nodeDiv">
 							<div class="layui-form-item">
 								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
@@ -119,15 +120,7 @@
 					preport: "",
 					fzwno: "",
 					userId: '',
-					deviceList: [{
-							id: 0,
-							name: '通用服务器'
-						},
-						{
-							id: 1,
-							name: '网关'
-						}
-					],
+					deviceList: [],
 					deviceSelected: '',
 					deviceName: '',
 					ip: '',
@@ -142,10 +135,10 @@
 					aSelected: '',
 					sList: [],
 					sSelected: '',
-					pSort: '',
-					cSort: '',
-					aSort: '',
-					sSort: ''
+					pSort: 0,
+					cSort: 0,
+					aSort: 0,
+					sSort: 0
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
@@ -159,7 +152,8 @@
 					let that = this;
 					// this.getVerifyCode();
 					this.getChildNodes();
-					// this.addrInit();
+					this.addrInit();
+					this.deviceType();
 				},
 				methods: {
 					getChildNodes() {
@@ -172,6 +166,21 @@
 								if (res.data.length > 0) {
 									this.nodeList = res.data;
 									this.nodeSelected = this.nodeList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					deviceType() {
+						api.deviceType({
+							data: {
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.deviceList = res.data;
+									this.deviceSelected = this.deviceList[0].id;
 								}
 							}
 						}).catch((err) => {
@@ -243,9 +252,9 @@
 							}
 						};
 						//初始化
-						this.cSort = '';
-						this.aSort = '';
-						this.sSort = '';
+						this.cSort = 0;
+						this.aSort = 0;
+						this.sSort = 0;
 
 						api.cityByP({
 							data: {
@@ -286,8 +295,8 @@
 							}
 						};
 						//初始化
-						this.aSort = '';
-						this.sSort = '';
+						this.aSort = 0;
+						this.sSort = 0;
 						api.areaByC({
 							data: {
 								'id': this.cSelected
@@ -322,7 +331,8 @@
 							}
 						};
 						//初始化
-						this.sSort = '';
+						this.sSort = 0;
+						
 						api.streetByA({
 							data: {
 								'id': this.aSelected
