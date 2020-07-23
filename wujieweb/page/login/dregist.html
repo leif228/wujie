@@ -23,12 +23,12 @@
 								<option :value="coupon.id" v-for="coupon in deviceList">{{coupon.name}}</option>
 							</select>
 						</div>
-						<div class="layui-form-item">
+						<!-- <div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-node"></label>
 							<select id="LAY-user-login-node" v-model="nodeSelected" @change="getNodeSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
 								<option :value="coupon.id" v-for="coupon in nodeList">{{coupon.name}}</option>
 							</select>
-						</div>
+						</div> -->
 
 						<div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-p"></label>
@@ -126,7 +126,8 @@
 					ip: '',
 					port: '',
 					nodeList: [],
-					nodeSelected: '',
+					nodeSelected: 0,
+					parentNodeId: 0,
 					pList: [],
 					pSelected: '',
 					cList: [],
@@ -142,7 +143,6 @@
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
-					// this.userSelected = this.userList[0].id;
 					this.deviceSelected = this.deviceList[0].id;
 
 					var user = JSON.parse(localStorage.getItem("sessionToken"));
@@ -150,8 +150,7 @@
 				},
 				mounted() {
 					let that = this;
-					// this.getVerifyCode();
-					this.getChildNodes();
+					// this.getChildNodes();
 					this.addrInit();
 					this.deviceType();
 				},
@@ -366,11 +365,11 @@
 					toLogin() {
 
 						// if (this.deviceSelected == 0 && !this.nodeSelected) {
-						if (!this.nodeSelected) {
-							errMsg("请选择上一级节点")
-							return;
-						}
-						if (this.nodeSelected == 0) {
+						// if (!this.nodeSelected) {
+						// 	errMsg("请选择上一级节点")
+						// 	return;
+						// }
+						if (this.deviceSelected == 0) {
 							if (!this.deviceName) {
 								errMsg("请输入设备名称")
 								return;
@@ -405,8 +404,9 @@
 								this.preip = res.data.ip;
 								this.preport = res.data.port;
 								this.fzwno = res.data.fzwno;
+								this.parentNodeId = res.data.parentNodeId;
 
-								if (this.nodeSelected == 0) {
+								if (this.deviceSelected == 0 || this.deviceSelected == 1 ) {
 									//设置该请求不带token访问，绕过权限认证
 									localStorage.setItem("url_no_token", 0);
 									this.tcpClientConnect();
@@ -426,7 +426,7 @@
 								'deviceName': this.deviceName,
 								'ip': this.ip,
 								'port': this.port,
-								'nodeId': this.nodeSelected,
+								'nodeId': this.parentNodeId,
 								'fzwno': this.fzwno
 							}
 						}).then((res) => {
