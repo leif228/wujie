@@ -20,7 +20,7 @@
 						<div class="layui-form-item">
 							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-devicetype"></label>
 							<select id="LAY-user-login-devicetype" v-model="deviceSelected" @change="getDeviceSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
-								<option :value="coupon.id" v-for="coupon in deviceList">{{coupon.name}}</option>
+								<option :value="coupon.id" v-for="coupon in deviceList">{{coupon.devType}}</option>
 							</select>
 						</div>
 						<!-- <div class="layui-form-item">
@@ -143,7 +143,7 @@
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
-					this.deviceSelected = this.deviceList[0].id;
+					// this.deviceSelected = this.deviceList[0].id;
 
 					var user = JSON.parse(localStorage.getItem("sessionToken"));
 					this.userId = user.id;
@@ -224,7 +224,7 @@
 					getDeviceSelected() {
 						//获取选中的优惠券
 						console.log(this.deviceSelected)
-						if (this.deviceSelected == 0) {
+						if (this.deviceSelected == 1  || this.deviceSelected == 2  ) {
 
 							var div = document.getElementById("nodeDiv")
 							div.style = 'display:block;';
@@ -369,7 +369,7 @@
 						// 	errMsg("请选择上一级节点")
 						// 	return;
 						// }
-						if (this.deviceSelected == 0) {
+						if (this.deviceSelected == 1 || this.deviceSelected == 2) {
 							if (!this.deviceName) {
 								errMsg("请输入设备名称")
 								return;
@@ -406,10 +406,15 @@
 								this.fzwno = res.data.fzwno;
 								this.parentNodeId = res.data.parentNodeId;
 
-								if (this.deviceSelected == 0 || this.deviceSelected == 1 ) {
+								if (this.deviceSelected == 1 ) {
 									//设置该请求不带token访问，绕过权限认证
 									localStorage.setItem("url_no_token", 0);
 									this.tcpClientConnect();
+									localStorage.setItem("url_no_token", 1);
+								}else{
+									//设置该请求不带token访问，绕过权限认证
+									localStorage.setItem("url_no_token", 0);
+									this.getFullFzwno();
 									localStorage.setItem("url_no_token", 1);
 								}
 							}
@@ -450,7 +455,6 @@
 							// this.getVerifyCode();
 						});
 					},
-					// 登陆
 					tcpClientConnect() {
 
 						api.tcpClientConnect({
@@ -464,6 +468,32 @@
 							if (res.code == 0) {
 								layer.msg(res.msg);
 								this.secDeviceRegist();
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					getFullFzwno() {
+
+						api.getFullFzwno({
+							data: {
+								'currIp': this.ip,
+								'ip': this.preip,
+								'port': this.preport,
+								'fzwno': this.fzwno,
+								'deviceType':this.deviceSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								this.fzwno = res.data;
+								if (this.deviceSelected == 2 ) {
+									//设置该请求不带token访问，绕过权限认证
+									localStorage.setItem("url_no_token", 0);
+									this.tcpClientConnect();
+									localStorage.setItem("url_no_token", 1);
+								}
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
