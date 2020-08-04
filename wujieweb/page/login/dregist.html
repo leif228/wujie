@@ -6,6 +6,7 @@
 		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
 		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
 		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
 	</head>
 	<body layadmin-themealias="classic-black-header">
 		<div id="login" class="layui-fluid">
@@ -83,22 +84,52 @@
 
 					</div>
 					<div v-show="operatingBool" class="layadmin-user-login-box layadmin-user-login-footer" style="display: none;">
-						<div class="layui-form-item">
-							<label class="layui-form-label">ip：</label>
-							<div class="layui-input-block">
-								<el-input required v-model="preip"></el-input>
+						<div style="display: none;">
+							<div class="layui-form-item">
+								<label class="layui-form-label">区域ip：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="preip"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">区域port：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="preport"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">区域fzwno：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="loginfzwno"></el-input>
+								</div>
 							</div>
 						</div>
-						<div class="layui-form-item">
-							<label class="layui-form-label">port：</label>
-							<div class="layui-input-block">
-								<el-input required v-model="preport"></el-input>
-							</div>
-						</div>
+
 						<div class="layui-form-item">
 							<label class="layui-form-label">fzwno：</label>
 							<div class="layui-input-block">
 								<el-input required v-model="fzwno"></el-input>
+							</div>
+						</div>
+
+						<div style="display: none;">
+							<div class="layui-form-item">
+								<label class="layui-form-label">归属ip：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="owerip"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">归属port：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="owerport"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">归属fzwno：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="owerfzwno"></el-input>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -118,8 +149,14 @@
 					currIp: "",
 					preip: "",
 					preport: "",
+					loginfzwno: "",
 					fzwno: "",
+					owerip: "",
+					owerport: "",
+					owerfzwno: "",
 					userId: '',
+					userName: '',
+					passWord: '',
 					deviceList: [],
 					deviceSelected: '',
 					deviceName: '',
@@ -147,6 +184,8 @@
 
 					var user = JSON.parse(localStorage.getItem("sessionToken"));
 					this.userId = user.id;
+					this.userName = user.userName;
+					this.passWord = user.passWord;
 				},
 				mounted() {
 					let that = this;
@@ -173,8 +212,7 @@
 					},
 					deviceType() {
 						api.deviceType({
-							data: {
-							}
+							data: {}
 						}).then((res) => {
 							if (res.code == 0) {
 								if (res.data.length > 0) {
@@ -224,7 +262,7 @@
 					getDeviceSelected() {
 						//获取选中的优惠券
 						console.log(this.deviceSelected)
-						if (this.deviceSelected == 1  || this.deviceSelected == 2  ) {
+						if (this.deviceSelected == 1 || this.deviceSelected == 2) {
 
 							var div = document.getElementById("nodeDiv")
 							div.style = 'display:block;';
@@ -331,7 +369,7 @@
 						};
 						//初始化
 						this.sSort = 0;
-						
+
 						api.streetByA({
 							data: {
 								'id': this.aSelected
@@ -403,15 +441,20 @@
 								this.operatingBool = true;
 								this.preip = res.data.ip;
 								this.preport = res.data.port;
+								this.loginfzwno = res.data.loginFzwno
 								this.fzwno = res.data.fzwno;
 								this.parentNodeId = res.data.parentNodeId;
 
-								if (this.deviceSelected == 1 ) {
+								this.owerip = res.data.owerIp;
+								this.owerport = res.data.owerPort;
+								this.owerfzwno = res.data.owerFzwno;
+
+								if (this.deviceSelected == 1) {
 									//设置该请求不带token访问，绕过权限认证
 									localStorage.setItem("url_no_token", 0);
 									this.tcpClientConnect();
 									localStorage.setItem("url_no_token", 1);
-								}else{
+								} else {
 									//设置该请求不带token访问，绕过权限认证
 									localStorage.setItem("url_no_token", 0);
 									this.getFullFzwno();
@@ -474,6 +517,27 @@
 							// this.getVerifyCode();
 						});
 					},
+					owerLoginNotify() {
+
+						api.owerLoginNotify({
+							data: {
+								'currIp': this.owerip,
+								'oid': this.fzwno,
+								'serverIp': this.preip,
+								'serverPort': this.preport,
+								'serverOid': this.loginfzwno,
+								'owerServerOid': this.owerfzwno
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					//除了了管理服务器其它都要取fullFzwno
 					getFullFzwno() {
 
 						api.getFullFzwno({
@@ -482,17 +546,31 @@
 								'ip': this.preip,
 								'port': this.preport,
 								'fzwno': this.fzwno,
-								'deviceType':this.deviceSelected
+								'deviceType': this.deviceSelected
 							}
 						}).then((res) => {
 							if (res.code == 0) {
 								layer.msg(res.msg);
 								this.fzwno = res.data;
-								if (this.deviceSelected == 2 ) {
+								if (this.deviceSelected == 2) {
 									//设置该请求不带token访问，绕过权限认证
 									localStorage.setItem("url_no_token", 0);
 									this.tcpClientConnect();
 									localStorage.setItem("url_no_token", 1);
+								}
+								//通知管理服务器登录
+								this.owerLoginNotify();
+
+								//手机webview接口
+								if (test) {
+									//注册为手机
+									if (this.deviceSelected == 5)
+										test.toTcp(this.preip, this.preport, this.fzwno);
+									//注册为网关	
+									if (this.deviceSelected == 6)
+										test.toNetInfo(this.fzwno, this.userName, this.preip,this.preport,this.loginfzwno,this.owerip,this.owerport,this.owerfzwno,this.passWord);
+										
+									//OID,Name,Identity,PhoneNum,Address,OwnerAddress,ServerIP,ServerPort,ServerOID,OwnerServerIP,OwnerServerPort,OwnerServerOID,PassNum,	
 								}
 							}
 						}).catch((err) => {
