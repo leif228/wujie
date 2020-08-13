@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>节点连接</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-node"></label>
+							<select id="LAY-user-login-node" v-model="nodeSelected" @change="getNodeSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in nodeList">{{coupon.name}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toNodeConn">获取连接数</button>
+						</div>
+					</div>
+
+					<div v-show="operatingBool" class="layadmin-user-login-box layadmin-user-login-footer" style="display: none;">
+						<div class="layui-form-item">
+							<label class="layui-form-label">连接fzwnos:</label>
+							<div class="layui-input-block">
+								<el-input required v-model="fzwnos"></el-input>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#login',
+				data: {
+					operatingBool: false,
+					fzwnos: "",
+					nodeList: [],
+					nodeSelectedIp:"",
+					nodeSelected: 0
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
+					// this.deviceSelected = this.deviceList[0].id;
+
+				},
+				mounted() {
+					let that = this;
+					this.getChildNodes();
+				},
+				methods: {
+					getChildNodes() {
+						api.getChildNodes({
+							data: {
+								'nodeId': 1
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.nodeList = res.data;
+									this.nodeSelected = this.nodeList[0].id;
+									this.nodeSelectedIp = this.nodeList[0].ip;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getNodeSelected() {
+						//获取选中的优惠券
+						console.log(this.nodeSelected);
+						var arr = this.nodeList;
+						if (arr.length > 0) {
+							for (j = 0, len = arr.length; j < len; j++) {
+								if (this.nodeSelected == arr[j].id) {
+									this.nodeSelectedIp = arr[j].ip;
+									break;
+								}
+							}
+						};
+						
+					},
+					toNodeConn() {
+						//设置该请求不带token访问，绕过权限认证
+						localStorage.setItem("url_no_token", 0);
+						api.getTcpClientConnectInfo({
+							data: {
+								'currIp': this.nodeSelectedIp
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								this.operatingBool = true;
+								this.fzwnos = res.msg;
+							}
+							localStorage.setItem("url_no_token", 1);
+						}).catch((err) => {
+							localStorage.setItem("url_no_token", 1);
+							layer.msg(err.msg);
+						});
+					}
+				},
+			});
+		</script>
+	</body>
+</html>

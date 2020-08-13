@@ -15,6 +15,10 @@ const domain = "http://192.168.3.60:8888";
 
 const api = {
 	domain: domain,
+	deviceComp(reqObj = {}) {
+		reqObj.url = domain + "/deviceComp";
+		return yajax(reqObj);
+	},
 	addrInit(reqObj = {}) {
 		reqObj.url = domain + "/addrInit";
 		return yajax(reqObj);
