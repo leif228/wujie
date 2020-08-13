@@ -30,11 +30,16 @@
 					</div>
 
 					<div v-show="operatingBool" class="layadmin-user-login-box layadmin-user-login-footer" style="display: none;">
-						<div class="layui-form-item">
+						<!-- <div class="layui-form-item">
 							<label class="layui-form-label">连接fzwnos:</label>
 							<div class="layui-input-block">
 								<el-input required v-model="fzwnos"></el-input>
 							</div>
+						</div> -->
+						<div class="layui-form-item">
+							<select id="LAY-user-login-conn" v-model="connSelected" @change="getConnSelected" style="height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in connList">{{coupon.name}}</option>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -51,6 +56,8 @@
 					fzwnos: "",
 					nodeList: [],
 					nodeSelectedIp:"",
+					connList: [],
+					connSelected:"",
 					nodeSelected: 0
 				},
 				created() {
@@ -80,6 +87,10 @@
 							layer.msg(err.msg);
 						});
 					},
+					getConnSelected() {
+						//获取选中的优惠券
+						console.log(this.connSelected);	
+					},
 					getNodeSelected() {
 						//获取选中的优惠券
 						console.log(this.nodeSelected);
@@ -105,6 +116,27 @@
 							if (res.code == 0) {
 								this.operatingBool = true;
 								this.fzwnos = res.msg;
+								
+								var fzwnos = res.msg;
+								var fzwnoarr = [];
+								var fzwnoarr2 = [];
+								if (fzwnos && fzwnos != "") {
+									if (fzwnos.indexOf(",") != -1) {
+										fzwnoarr = fzwnos.split(',');
+										
+										for (j = 0, len = fzwnoarr.length; j < len; j++) {
+											fzwnoarr2[j] = {"name":fzwnoarr[j],"id":fzwnoarr[j]};
+										}
+										this.connList = fzwnoarr2;
+										this.connSelected = fzwnoarr2[0].id;
+									} else {
+										fzwnoarr = new Array;
+										fzwnoarr[0] = {"name":fzwnos,"id":fzwnos};
+									}
+								}
+								
+								this.connList = fzwnoarr;
+								this.connSelected = fzwnoarr[0].id;
 							}
 							localStorage.setItem("url_no_token", 1);
 						}).catch((err) => {
