@@ -106,6 +106,8 @@
 						
 					},
 					toNodeConn() {
+						this.connList = [];
+						this.connSelected = "";
 						//设置该请求不带token访问，绕过权限认证
 						localStorage.setItem("url_no_token", 0);
 						api.getTcpClientConnectInfo({
