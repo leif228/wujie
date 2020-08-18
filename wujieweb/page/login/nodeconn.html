@@ -129,14 +129,17 @@
 										}
 										this.connList = fzwnoarr2;
 										this.connSelected = fzwnoarr2[0].id;
+										
+										return;
 									} else {
 										fzwnoarr = new Array;
 										fzwnoarr[0] = {"name":fzwnos,"id":fzwnos};
+										
+										this.connList = fzwnoarr;
+										this.connSelected = fzwnoarr[0].id;
 									}
 								}
 								
-								this.connList = fzwnoarr;
-								this.connSelected = fzwnoarr[0].id;
 							}
 							localStorage.setItem("url_no_token", 1);
 						}).catch((err) => {
