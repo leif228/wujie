@@ -10,10 +10,12 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-// const domain = "http://192.168.1.41:8888";
-const domain = "http://192.168.3.60:8888";
+const rootIp = "192.168.3.60";
+const domain = "http://" + rootIp + ":8888";
+// const domain = "http://192.168.3.60:8888";
 
 const api = {
+	rootIp: rootIp,
 	domain: domain,
 	deviceComp(reqObj = {}) {
 		reqObj.url = domain + "/deviceComp";
@@ -45,6 +47,18 @@ const api = {
 	},
 	preDeviceRegist(reqObj = {}) {
 		reqObj.url = domain + "/preDeviceRegist";
+		return yajax(reqObj);
+	},
+	deviceRegistElse(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/deviceRegistElse";
+		return yajax(reqObj);
+	},
+	deviceRegistManage(reqObj = {}) {
+		reqObj.url = domain + "/deviceRegistManage";
+		return yajax(reqObj);
+	},
+	searchNode(reqObj = {}) {
+		reqObj.url = domain + "/searchNode";
 		return yajax(reqObj);
 	},
 	tcpClientConnect(reqObj = {}) {

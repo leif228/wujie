@@ -68,12 +68,15 @@
 				data: {
 					verifyCode: null, // 验证码图片
 					username: '', // 用户名
+					userId:'',
 					password: ''// 密码
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
 					// this.userSelected = this.userList[0].id;
 					// this.deviceSelected = this.deviceList[0].id;
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
 				},
 				mounted() {
 					let that = this;
@@ -92,7 +95,10 @@
 						});
 					}, */
 					toRegist(){
-						window.location.href = './dregist.html';
+						if(this.userId == 1)
+							window.location.href = './mdregist.html';
+						else
+							window.location.href = './edregist.html';
 					},
 					toNodeConn(){
 						window.location.href = './nodeconn.html';

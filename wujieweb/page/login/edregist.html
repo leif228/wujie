@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>注册</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-devicetype"></label>
+							<select id="LAY-user-login-devicetype" v-model="deviceSelected" @change="getDeviceSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in deviceList">{{coupon.devType}}</option>
+							</select>
+						</div>
+						<!-- <div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-node"></label>
+							<select id="LAY-user-login-node" v-model="nodeSelected" @change="getNodeSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in nodeList">{{coupon.name}}</option>
+							</select>
+						</div> -->
+
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-p"></label>
+							<select id="LAY-user-login-p" v-model="pSelected" @change="getPSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.provinceId" v-for="coupon in pList">{{coupon.provinceName}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-c"></label>
+							<select id="LAY-user-login-c" v-model="cSelected" @change="getCSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.cityId" v-for="coupon in cList">{{coupon.cityName}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-a"></label>
+							<select id="LAY-user-login-a" v-model="aSelected" @change="getASelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.areaId" v-for="coupon in aList">{{coupon.areaName}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-s"></label>
+							<select id="LAY-user-login-s" v-model="sSelected" @change="getSSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.streetId" v-for="coupon in sList">{{coupon.streetName}}</option>
+							</select>
+						</div>
+
+						<div id="nodeDiv">
+							<div class="layui-form-item">
+								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
+								<input type="text" v-model="deviceName" name="deviceName" id="LAY-user-login-deviceName" maxlength="18"
+								 lay-verify="required" placeholder="设备名称" class="layui-input">
+							</div>
+							<div class="layui-form-item">
+								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-ip"></label>
+								<input type="text" v-model="ip" name="ip" id="LAY-user-login-ip" maxlength="18" lay-verify="required"
+								 placeholder="ip" class="layui-input">
+							</div>
+							<div class="layui-form-item">
+								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-port"></label>
+								<input type="text" v-model="port" name="port" id="LAY-user-login-port" maxlength="18" lay-verify="required"
+								 placeholder="port" class="layui-input">
+							</div>
+						</div>
+
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">注 册</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toIndex">主 页</button>
+						</div>
+
+
+					</div>
+					<div v-show="operatingBool" class="layadmin-user-login-box layadmin-user-login-footer" style="display: none;">
+						<div style="display: none;">
+							<div class="layui-form-item">
+								<label class="layui-form-label">区域ip：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="preip"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">区域port：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="preport"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">区域fzwno：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="loginfzwno"></el-input>
+								</div>
+							</div>
+						</div>
+
+						<div class="layui-form-item">
+							<label class="layui-form-label">fzwno：</label>
+							<div class="layui-input-block">
+								<el-input required v-model="fzwno"></el-input>
+							</div>
+						</div>
+
+						<div style="display: none;">
+							<div class="layui-form-item">
+								<label class="layui-form-label">归属ip：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="owerip"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">归属port：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="owerport"></el-input>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">归属fzwno：</label>
+								<div class="layui-input-block">
+									<el-input required v-model="owerfzwno"></el-input>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#login',
+				data: {
+					// verifyCode: null, // 验证码图片
+
+					operatingBool: false,
+					idcard: "",
+					currIp: "",
+					preip: "",
+					preport: "",
+					loginfzwno: "",
+					fzwno: "",
+					owerip: "",
+					owerport: "",
+					owerfzwno: "",
+					userId: '',
+					userName: '',
+					passWord: '',
+					owerServerIp: '',
+					deviceList: [],
+					deviceSelected: '',
+					deviceName: '',
+					ip: '',
+					port: '',
+					nodeList: [],
+					nodeSelected: 0,
+					parentNodeId: 0,
+					pList: [],
+					pSelected: '',
+					cList: [],
+					cSelected: '',
+					aList: [],
+					aSelected: '',
+					sList: [],
+					sSelected: '',
+					pSort: 0,
+					cSort: 0,
+					aSort: 0,
+					sSort: 0
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
+					// this.deviceSelected = this.deviceList[0].id;
+
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
+					this.userName = user.userName;
+					this.passWord = user.passWord;
+					this.owerServerIp = user.owerIp;
+					this.idcard = user.idcard;
+				},
+				mounted() {
+					let that = this;
+					// this.getChildNodes();
+					this.addrInit();
+					this.deviceType();
+				},
+				methods: {
+					getChildNodes() {
+						api.getChildNodes({
+							data: {
+								'nodeId': 1
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.nodeList = res.data;
+									this.nodeSelected = this.nodeList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					deviceType() {
+						api.deviceType({
+							data: {}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.deviceList = res.data;
+									this.deviceSelected = this.deviceList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					addrInit() {
+						api.addrInit({
+							data: {}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.bsp.length > 0) {
+									this.pList = res.data.bsp;
+									this.pSelected = this.pList[0].provinceId;
+									this.pSort = this.pList[0].sort;
+								}
+								if (res.data.bsc.length > 0) {
+									this.cList = res.data.bsc;
+									this.cSelected = this.cList[0].cityId;
+									this.cSort = this.cList[0].sort;
+								}
+								if (res.data.bsa.length > 0) {
+									this.aList = res.data.bsa;
+									this.aSelected = this.aList[0].areaId;
+									this.aSort = this.aList[0].sort;
+								}
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					toIndex() {
+						//获取选中的优惠券
+						window.location.href = './index.html';
+						// layer.msg(this.userSelected);
+					},
+					getDeviceSelected() {
+						//获取选中的优惠券
+						console.log(this.deviceSelected)
+						if (this.deviceSelected == 1 || this.deviceSelected == 2) {
+
+							var div = document.getElementById("nodeDiv")
+							div.style = 'display:block;';
+						} else {
+							var div = document.getElementById("nodeDiv")
+							div.style = 'display:none;';
+						}
+					},
+					getNodeSelected() {
+						//获取选中的优惠券
+						console.log(this.nodeSelected)
+						// layer.msg(this.userSelected);
+					},
+					getPSelected() {
+						//获取选中的优惠券
+						console.log(this.pSelected)
+						var arr = this.pList;
+						if (arr.length > 0) {
+							for (j = 0, len = arr.length; j < len; j++) {
+								if (this.pSelected == arr[j].provinceId) {
+									this.pSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+						//初始化
+						this.cSort = 0;
+						this.aSort = 0;
+						this.sSort = 0;
+
+						api.cityByP({
+							data: {
+								'id': this.pSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.bsc.length > 0) {
+									this.cList = res.data.bsc;
+									this.cSelected = this.cList[0].cityId;
+									this.cSort = this.cList[0].sort;
+								}
+								if (res.data.bsa.length > 0) {
+									this.aList = res.data.bsa;
+									this.aSelected = this.aList[0].areaId;
+									this.aSort = this.aList[0].sort;
+								}
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getCSelected() {
+						//获取选中的优惠券
+						console.log(this.cSelected);
+						var arr = this.cList;
+						if (arr.length > 0) {
+							for (j = 0, len = arr.length; j < len; j++) {
+								if (this.cSelected == arr[j].cityId) {
+									this.cSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+						//初始化
+						this.aSort = 0;
+						this.sSort = 0;
+						api.areaByC({
+							data: {
+								'id': this.cSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.bsa.length > 0) {
+									this.aList = res.data.bsa;
+									this.aSelected = this.aList[0].areaId;
+									this.aSort = this.aList[0].sort;
+								}
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getASelected() {
+						//获取选中的优惠券
+						console.log(this.aSelected);
+						var arr = this.aList;
+						if (arr.length > 0) {
+							for (j = 0, len = arr.length; j < len; j++) {
+								if (this.aSelected == arr[j].areaId) {
+									this.aSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+						//初始化
+						this.sSort = 0;
+
+						api.streetByA({
+							data: {
+								'id': this.aSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.bss.length > 0) {
+									this.sList = res.data.bss;
+									this.sSelected = this.sList[0].streetId;
+									this.sSort = this.sList[0].sort;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getSSelected() {
+						//获取选中的优惠券
+						console.log(this.sSelected);
+						var arr = this.sList;
+						if (arr.length > 0) {
+							for (j = 0, len = arr.length; j < len; j++) {
+								if (this.sSelected == arr[j].streetId) {
+									this.sSort = arr[j].sort;
+									break;
+								}
+							}
+						};
+					},
+					// 登陆 
+					toLogin() {
+
+						// if (this.deviceSelected == 0 && !this.nodeSelected) {
+						// if (!this.nodeSelected) {
+						// 	errMsg("请选择上一级节点")
+						// 	return;
+						// }
+						if (this.deviceSelected == 1 || this.deviceSelected == 2) {
+							if (!this.deviceName) {
+								errMsg("请输入设备名称")
+								return;
+							}
+							if (!this.ip) {
+								errMsg("请输入ip")
+								return;
+							}
+							if (!this.port) {
+								errMsg("请输入port")
+								return;
+							}
+						}
+						//设置该请求不带token访问，绕过权限认证
+						localStorage.setItem("url_no_token", 0);
+						this.deviceRegistElse();
+						localStorage.setItem("url_no_token", 1);
+					},
+					deviceRegistElse() {
+						api.deviceRegistElse({
+							data: {
+								'rootIp': api.rootIp,
+								'currIp': this.owerServerIp,
+								'deviceSelected': this.deviceSelected,
+								'deviceName': this.deviceName,
+								'idcard': this.idcard,
+								'pSort': this.pSort,
+								'cSort': this.cSort,
+								'aSort': this.aSort,
+								'sSort': this.sSort
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								this.operatingBool = true;
+								this.preip = res.data.ip;
+								this.preport = res.data.port;
+								this.loginfzwno = res.data.loginFzwno
+								this.fzwno = res.data.fzwno;
+								this.parentNodeId = res.data.parentNodeId;
+
+								this.owerip = res.data.owerIp;
+								this.owerport = res.data.owerPort;
+								this.owerfzwno = res.data.owerFzwno;
+
+								if (this.deviceSelected == 2) {
+									//设置该请求不带token访问，绕过权限认证
+									localStorage.setItem("url_no_token", 0);
+									this.tcpClientConnect();
+									localStorage.setItem("url_no_token", 1);
+								}
+
+								//通知管理服务器登录
+								//设置该请求不带token访问，绕过权限认证
+								localStorage.setItem("url_no_token", 0);
+								this.owerLoginNotify();								
+								localStorage.setItem("url_no_token", 1);
+
+								//手机webview接口
+								if (test) {
+									//注册为手机
+									if (this.deviceSelected == 5)
+										test.toTcp(this.preip, this.preport, this.fzwno);
+									//注册为网关	
+									if (this.deviceSelected == 6)
+										test.toNetInfo(this.fzwno, this.userName, this.preip, this.preport, this.loginfzwno, this.owerip, this.owerport,
+											this.owerfzwno, this.passWord);
+
+									//OID,Name,Identity,PhoneNum,Address,OwnerAddress,ServerIP,ServerPort,ServerOID,OwnerServerIP,OwnerServerPort,OwnerServerOID,PassNum,	
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					searchNode() {
+						api.searchNode({
+							data: {
+								'pSort': this.pSort,
+								'cSort': this.cSort,
+								'aSort': this.aSort,
+								'sSort': this.sSort
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+
+								this.owerip = res.data.ip;
+								this.owerport = res.data.port;
+								this.owerfzwno = res.data.loginFzwno;
+
+								//设置该请求不带token访问，绕过权限认证
+								localStorage.setItem("url_no_token", 0);
+								this.deviceRegistElse();
+								localStorage.setItem("url_no_token", 1);
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					secDeviceRegist() {
+						api.secDeviceRegist({
+							data: {
+								'userId': this.userId,
+								'deviceSelected': this.deviceSelected,
+								'deviceName': this.deviceName,
+								'ip': this.ip,
+								'port': this.port,
+								'nodeId': this.parentNodeId,
+								'fzwno': this.fzwno
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								// this.operatingBool = true;
+								// this.preip = res.data.ip;
+								// this.preport = res.data.port;
+								// this.fzwno = res.data.fzwno;
+								// localStorage.setItem("sessionToken", res.data.userInfo)
+								// localStorage.setItem("token", res.data.token)
+								// sessionStorage.setItem("sessionToken", res.data.userInfo);
+								// sessionStorage.setItem("token", res.data.token);
+								// window.location.href = './index.html';
+								// localStorage.setItem("url_no_token", 0);
+								// this.tcpClientConnect();
+								// localStorage.setItem("url_no_token", 1);
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					tcpClientConnect() {
+
+						api.tcpClientConnect({
+							data: {
+								'currIp': this.ip,
+								'ip': this.preip,
+								'port': this.preport,
+								'fzwno': this.fzwno
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								// this.secDeviceRegist();
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					owerLoginNotify() {
+
+						api.owerLoginNotify({
+							data: {
+								'currIp': this.owerip,
+								'OID': this.fzwno,
+								'ServerIP': this.preip,
+								'ServerPort': this.preport,
+								'ServerOID': this.loginfzwno,
+								'OwnerServerOID': this.owerfzwno
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+					//除了了管理服务器其它都要取fullFzwno
+					getFullFzwno() {
+
+						api.getFullFzwno({
+							data: {
+								'currIp': this.ip,
+								'ip': this.preip,
+								'port': this.preport,
+								'fzwno': this.fzwno,
+								'deviceType': this.deviceSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								this.fzwno = res.data;
+								if (this.deviceSelected == 2) {
+									//设置该请求不带token访问，绕过权限认证
+									localStorage.setItem("url_no_token", 0);
+									this.tcpClientConnect();
+									localStorage.setItem("url_no_token", 1);
+								}
+								//通知管理服务器登录
+								this.owerLoginNotify();
+
+								//手机webview接口
+								if (test) {
+									//注册为手机
+									if (this.deviceSelected == 5)
+										test.toTcp(this.preip, this.preport, this.fzwno);
+									//注册为网关	
+									if (this.deviceSelected == 6)
+										test.toNetInfo(this.fzwno, this.userName, this.preip, this.preport, this.loginfzwno, this.owerip, this.owerport,
+											this.owerfzwno, this.passWord);
+
+									//OID,Name,Identity,PhoneNum,Address,OwnerAddress,ServerIP,ServerPort,ServerOID,OwnerServerIP,OwnerServerPort,OwnerServerOID,PassNum,	
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+				},
+			});
+		</script>
+	</body>
+</html>

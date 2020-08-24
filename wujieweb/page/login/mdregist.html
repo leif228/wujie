@@ -157,6 +157,7 @@
 					userId: '',
 					userName: '',
 					passWord: '',
+					owerServerIp:'',
 					deviceList: [],
 					deviceSelected: '',
 					deviceName: '',
@@ -186,6 +187,7 @@
 					this.userId = user.id;
 					this.userName = user.userName;
 					this.passWord = user.passWord;
+					this.owerServerIp = user.owerIp;
 				},
 				mounted() {
 					let that = this;
@@ -422,14 +424,13 @@
 							}
 						}
 
-						api.preDeviceRegist({
+						api.deviceRegistManage({
 							data: {
 								'userId': this.userId,
 								'deviceSelected': this.deviceSelected,
 								'deviceName': this.deviceName,
 								'ip': this.ip,
 								'port': this.port,
-								'nodeId': this.nodeSelected,
 								'pSort': this.pSort,
 								'cSort': this.cSort,
 								'aSort': this.aSort,
@@ -454,12 +455,7 @@
 									localStorage.setItem("url_no_token", 0);
 									this.tcpClientConnect();
 									localStorage.setItem("url_no_token", 1);
-								} else {
-									//设置该请求不带token访问，绕过权限认证
-									localStorage.setItem("url_no_token", 0);
-									this.getFullFzwno();
-									localStorage.setItem("url_no_token", 1);
-								}
+								} 
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
@@ -505,12 +501,17 @@
 								'currIp': this.ip,
 								'ip': this.preip,
 								'port': this.preport,
+								'deviceName': this.deviceName,
+								'selfIp': this.ip,
+								'selfPort': this.port,
+								'deviceSelected': this.deviceSelected,
 								'fzwno': this.fzwno
-							}
+							},
+														
 						}).then((res) => {
 							if (res.code == 0) {
 								layer.msg(res.msg);
-								this.secDeviceRegist();
+								//this.secDeviceRegist();
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);

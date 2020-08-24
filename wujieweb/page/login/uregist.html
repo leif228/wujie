@@ -354,14 +354,12 @@
 						}).then((res) => {
 							if (res.code == 0) {
 								layer.msg('注册成功');
-								localStorage.setItem("sessionToken", JSON.stringify(res.data.user));
-								localStorage.setItem("token", res.data.token);
-								// sessionStorage.setItem("sessionToken", res.data.userInfo);
-								// sessionStorage.setItem("token", res.data.token);
-								window.location.href = './index.html';
+								// localStorage.setItem("sessionToken", JSON.stringify(res.data.user));
+								// localStorage.setItem("token", res.data.token);
+								window.location.href = './login.html';
 							}
 						}).catch((err) => {
-							layer.msg(err.msg);
+							layer.msg(err);
 							// this.getVerifyCode();
 						});
 					},
