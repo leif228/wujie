@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+		<style type="text/css">
+			.content {
+
+				height: 300px;
+				border: solid 1px red;
+				overflow: scroll;
+				overflow-x: hidden;
+				padding: 0 20px;
+			}
+
+			.notice {
+				text-align: center;
+			}
+
+			.myMessage {
+				text-align: right;
+			}
+
+			.message {
+				border: solid 2px black;
+				display: inline-block;
+			}
+		</style>
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login">
+			<div style="height: 25px;background-color: #009F95;">
+				<p>事件群</p>
+			</div>
+			<div id="chat">
+				<!-- 聊天内容 -->
+				<div class="content" id="content">
+					<div v-for="(item,index) in messageList" :key="index">
+						<!-- 加入群聊 -->
+						<div class="notice" v-if="item.type=='addUser'">
+							<h2>{{item.user}}加入群聊</h2>
+						</div>
+						<!-- 退出群聊 -->
+						<div class="notice" v-if="item.type=='quit'">
+							<div>{{item.user}}退出群聊</div>
+						</div>
+						<!-- 收到消息 -->
+						<div :class="{'myMessage':item.userId==userId}" v-if="item.type=='message'">
+							<div>{{item.user}}:{{item.time}}</div>
+							<h3 class="message">{{item.content}}</h3>
+						</div>
+					</div>
+				</div>
+				<!-- 编辑栏 -->
+				<div>
+					<Input v-model="text" show-word-limit type="textarea" placeholder="Enter something..." style="width: 200px" />
+					<Button type="info" @click="send()">发送</Button>
+					<!-- <Button type="error" @click="quit()">退出</Button> -->
+				</div>
+			</div>
+
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			// demo data
+			var messageList = [{ //发送的消息格式
+					type: 'message', //发送类型
+					user: '姓名22',
+					userId: '2',
+					toUser: '', //消息接收方名
+					content: '哈哈22', //发送内容
+					time: '15:33' //发送时间
+				},
+				{ //发送的消息格式
+					type: 'message', //发送类型
+					user: '姓名11',
+					userId: '1',
+					toUser: '', //消息接收方名
+					content: '哈哈11', //发送内容
+					time: '15:34' //发送时间
+				},
+				{ //发送的消息格式
+					type: 'message', //发送类型
+					user: '姓名33',
+					userId: '3',
+					toUser: '', //消息接收方名
+					content: '哈哈33', //发送内容
+					time: '15:35' //发送时间
+				}
+			];
+			new Vue({
+				el: '#login',
+				data: {
+					messageList: messageList, //所有消息列表
+					users: [], //用户列表
+					ifEnter: false, //是否聊天状态
+					userName: '游客',
+					userId: '1',
+					text: '大家好', //内容
+					ws: null, //wbs
+					message: { //发送的消息格式
+						type: '', //发送类型
+						user: '',
+						userId: '',
+						toUser: '', //消息接收方名
+						content: '', //发送内容
+						time: '' //发送时间
+					}
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
+					// this.userSelected = this.userList[0].id;
+					// this.deviceSelected = this.deviceList[0].id;
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
+				},
+				mounted() {
+					let that = this;
+					// this.getVerifyCode();
+				},
+				methods: {
+					// 退出聊天室
+					quit() {
+						this.message.type = 'quit';
+						this.message.content = this.text;
+						this.ws.onopen();
+						this.ws.close();
+						this.ifEnter = false;
+
+					},
+					send() {
+						this.message.type = 'message';
+						this.message.content = this.text;
+						// this.ws.onopen();
+					},
+					// 登陆 
+					toLogin() {
+
+						if (!this.username) {
+							errMsg("请输入用户名")
+							return;
+						}
+						if (!this.password) {
+							errMsg("请输入密码")
+							return;
+						}
+						api.login({
+							data: {
+								'username': this.username,
+								'password': this.password
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(注册成功);
+								// localStorage.setItem("sessionToken", res.data.userInfo)
+								// localStorage.setItem("token", res.data.token)
+								// sessionStorage.setItem("sessionToken", res.data.userInfo);
+								// sessionStorage.setItem("token", res.data.token);
+								window.location.href = '../index.html';
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+				},
+			});
+		</script>
+	</body>
+</html>
