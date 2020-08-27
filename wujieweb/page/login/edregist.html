@@ -464,11 +464,15 @@
 									localStorage.setItem("url_no_token", 1);
 								}
 
-								//通知管理服务器登录
-								//设置该请求不带token访问，绕过权限认证
-								localStorage.setItem("url_no_token", 0);
-								this.owerLoginNotify();								
-								localStorage.setItem("url_no_token", 1);
+								//注册为手机
+								if (this.deviceSelected == 5) {
+									//通知管理服务器登录
+									//设置该请求不带token访问，绕过权限认证
+									localStorage.setItem("url_no_token", 0);
+									this.owerLoginNotify();
+									localStorage.setItem("url_no_token", 1);
+								}
+
 
 								//手机webview接口
 								if (test) {

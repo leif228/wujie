@@ -72,6 +72,8 @@
 					ifEnter: false, //是否聊天状态
 					userName: '游客',
 					userId: '1',
+					oid:'',
+					owerIp:'',
 					text: '大家好', //内容
 					ws: null, //wbs
 					message: { //发送的消息格式
@@ -89,6 +91,8 @@
 					// this.deviceSelected = this.deviceList[0].id;
 					var user = JSON.parse(localStorage.getItem("sessionToken"));
 					this.userId = user.id;
+					this.oid = user.oid;
+					this.owerIp = user.owerIp;
 				},
 				mounted() {
 					let that = this;
