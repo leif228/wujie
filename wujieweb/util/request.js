@@ -10,7 +10,7 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-const rootIp = "192.168.3.60";
+const rootIp = "192.168.3.86";
 const domain = "http://" + rootIp + ":8888";
 // const domain = "http://192.168.3.60:8888";
 
@@ -53,6 +53,10 @@ const api = {
 		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/deviceRegistElse";
 		return yajax(reqObj);
 	},
+	myEventList(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/myEventList";
+		return yajax(reqObj);
+	},
 	deviceRegistManage(reqObj = {}) {
 		reqObj.url = domain + "/deviceRegistManage";
 		return yajax(reqObj);
@@ -72,6 +76,10 @@ const api = {
 	owerLoginNotify(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/owerLoginNotify";
 		return yajax(reqObj);
+	},
+	wjhttp(reqObj = {}) {
+		reqObj.url = "http://" + rootIp + ":8888" + "/wjhttp";
+		return yajax2(reqObj);
 	},
 	getFullFzwno(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.ip + ":8888" + "/getFullFzwno";
@@ -158,6 +166,69 @@ const api = {
 
 
 };
+// 同步执行ajax字节数组
+function yajax2({
+	type = "POST",
+	url,
+	data = {},
+	timeout = 10000,
+	loading = true
+}) {
+	return new Promise((resolve, reject) => {
+		let layerIdx = null;
+		if (loading) {
+			layerIdx = layer.msg('加载中', {
+				icon: 16
+			});
+		}
+		let token = localStorage.getItem("token");
+		let url_no_token = localStorage.getItem("url_no_token");
+		token = token != "" ? token : '';
+		$.ajax({
+			type: type,
+			url: url,
+			data: data,
+			timeout: timeout,
+			xhrFields: {
+				withCredentials: true // 设置运行跨域操作
+			},
+			beforeSend: (XMLHttpRequest) => {
+				// if(url_no_token==0){
+					
+				// }else{
+					XMLHttpRequest.setRequestHeader("Authorization", token);
+				// }
+				XMLHttpRequest.setRequestHeader("Content-type", "application/octet-stream");
+			},
+			success(res) {
+				layerIdx ? layer.close(layerIdx) : '';
+				if (res.code == 'S00015') {
+					// if(parent.location.pathname.indexOf("page/index/index.html") != 0){
+					// 	parent.location.href = '../login/login.html';
+					// 	return;
+					// }
+					window.location.href = '../login/login.html';
+				}
+				if (res.code == 304) {
+					resolve(res);
+					return;
+				}
+				if (res.code != 0) {
+					reject(res);
+					errMsg(res.msg || res.status);
+					return;
+				}
+				resolve(res);
+			},
+			error(XmlHttpRequest, textStatus, errorThrown) {
+				layerIdx ? layer.close(layerIdx) : '';
+				errMsg(textStatus);
+				reject(textStatus);
+			}
+		});
+	});
+
+}
 
 // 同步执行ajax
 function yajax({
@@ -181,18 +252,16 @@ function yajax({
 			type: type,
 			url: url,
 			data: data,
-			// //dataType:'json',
-			// contentType:'application/json',
 			timeout: timeout,
 			xhrFields: {
 				withCredentials: true // 设置运行跨域操作
 			},
 			beforeSend: (XMLHttpRequest) => {
-				if(url_no_token==0){
+				// if(url_no_token==0){
 					
-				}else{
+				// }else{
 					XMLHttpRequest.setRequestHeader("Authorization", token);
-				}
+				// }
 			},
 			success(res) {
 				layerIdx ? layer.close(layerIdx) : '';

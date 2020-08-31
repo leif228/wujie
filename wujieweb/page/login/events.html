@@ -29,8 +29,8 @@
 			</div>
 			<!-- 内容 -->
 			<div class="content" id="content">
-				<div v-for="(item,index) in messageList" :key="index" :class="{'isMe':item.userId==userId}">{{item.content}}(
-					{{item.userId}} )</div>
+				<div v-for="(item,index) in messageList" :key="index" :id={{item.eventNo}}>{{item.eventName}}(
+					{{item.creatTime}} )</div>
 			</div>
 
 
@@ -41,28 +41,10 @@
 		<script type="text/javascript">
 			// demo data
 			var messageList = [{ //发送的消息格式
-					type: 'message', //发送类型
-					user: '姓名22',
-					userId: '2',
-					toUser: '', //消息接收方名
-					content: '哈哈22', //发送内容
-					time: '15:33' //发送时间
-				},
-				{ //发送的消息格式
-					type: 'message', //发送类型
-					user: '姓名11',
-					userId: '1',
-					toUser: '', //消息接收方名
-					content: '哈哈11', //发送内容
-					time: '15:34' //发送时间
-				},
-				{ //发送的消息格式
-					type: 'message', //发送类型
-					user: '姓名33',
-					userId: '3',
-					toUser: '', //消息接收方名
-					content: '哈哈33', //发送内容
-					time: '15:35' //发送时间
+					eventNo: 'message', //发送类型
+					eventName: '姓名22',
+					creatTime: '2',
+					status: ''
 				}
 			];
 			new Vue({
@@ -73,16 +55,15 @@
 					userName: '游客',
 					userId: '1',
 					oid:'',
+					mobileFzwno:'',
 					owerIp:'',
 					text: '大家好', //内容
 					ws: null, //wbs
 					message: { //发送的消息格式
-						type: '', //发送类型
-						user: '',
-						userId: '',
-						toUser: '', //消息接收方名
-						content: '', //发送内容
-						time: '' //发送时间
+						eventNo: '', //发送类型
+						eventName: '',
+						creatTime: '',
+						status: ''
 					}
 				},
 				created() {
@@ -96,7 +77,8 @@
 				},
 				mounted() {
 					let that = this;
-					// this.getVerifyCode();
+					this.getMobileFzwno();
+					// this.toLogin();
 				},
 				methods: {
 					// 退出聊天室
@@ -113,30 +95,25 @@
 						this.message.content = this.text;
 						// this.ws.onopen();
 					},
+					getMobileFzwno() {
+						if(test){
+							this.mobileFzwno = test.getMobileFzwno();
+						}
+					},
 					// 登陆 
 					toLogin() {
-
-						if (!this.username) {
-							errMsg("请输入用户名")
-							return;
-						}
-						if (!this.password) {
-							errMsg("请输入密码")
-							return;
-						}
-						api.login({
+						
+						api.myEventList({
 							data: {
-								'username': this.username,
-								'password': this.password
+								'oid': this.mobileFzwno,
+								'currIp':this.owerIp
 							}
 						}).then((res) => {
 							if (res.code == 0) {
-								layer.msg(注册成功);
-								// localStorage.setItem("sessionToken", res.data.userInfo)
-								// localStorage.setItem("token", res.data.token)
-								// sessionStorage.setItem("sessionToken", res.data.userInfo);
-								// sessionStorage.setItem("token", res.data.token);
-								window.location.href = '../index.html';
+								layer.msg(成功);
+								this.messageList = res.data;								
+								
+								//window.location.href = '../index.html';
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
