@@ -10,9 +10,9 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-const rootIp = "192.168.3.86";
-const domain = "http://" + rootIp + ":8888";
-// const domain = "http://192.168.3.60:8888";
+const rootIp = "192.168.3.60";
+const domain = "http://" + rootIp + ":9999";
+// const domain = "http://192.168.3.60:9999";
 
 const api = {
 	rootIp: rootIp,
@@ -50,11 +50,11 @@ const api = {
 		return yajax(reqObj);
 	},
 	deviceRegistElse(reqObj = {}) {
-		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/deviceRegistElse";
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/deviceRegistElse";
 		return yajax(reqObj);
 	},
 	myEventList(reqObj = {}) {
-		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/myEventList";
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/myEventList";
 		return yajax(reqObj);
 	},
 	deviceRegistManage(reqObj = {}) {
@@ -66,23 +66,23 @@ const api = {
 		return yajax(reqObj);
 	},
 	tcpClientConnect(reqObj = {}) {
-		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/tcpClientConnect";
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/tcpClientConnect";
 		return yajax(reqObj);
 	},
 	getTcpClientConnectInfo(reqObj = {}) {
-		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/getTcpClientConnectInfo";
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/getTcpClientConnectInfo";
 		return yajax(reqObj);
 	},
 	owerLoginNotify(reqObj = {}) {
-		reqObj.url = "http://" + reqObj.data.currIp + ":8888" + "/owerLoginNotify";
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/owerLoginNotify";
 		return yajax(reqObj);
 	},
 	wjhttp(reqObj = {}) {
-		reqObj.url = "http://" + rootIp + ":8888" + "/wjhttp";
+		reqObj.url = "http://" + rootIp + ":9999" + "/wjhttp";
 		return yajax2(reqObj);
 	},
 	getFullFzwno(reqObj = {}) {
-		reqObj.url = "http://" + reqObj.data.ip + ":8888" + "/getFullFzwno";
+		reqObj.url = "http://" + reqObj.data.ip + ":9999" + "/getFullFzwno";
 		return yajax(reqObj);
 	},
 	getChildNodes(reqObj = {}) {
@@ -254,13 +254,14 @@ function yajax({
 			data: data,
 			timeout: timeout,
 			xhrFields: {
-				withCredentials: true // 设置运行跨域操作
+				withCredentials: false // 设置运行跨域操作
 			},
 			beforeSend: (XMLHttpRequest) => {
 				// if(url_no_token==0){
 					
 				// }else{
 					XMLHttpRequest.setRequestHeader("Authorization", token);
+					XMLHttpRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
 				// }
 			},
 			success(res) {

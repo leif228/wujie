@@ -513,8 +513,30 @@
 						xhr.onload = function(oEvent) {
 							var arrayBuffer = xhr.response; // Note: not oReq.responseText
 							if (arrayBuffer) {
+
 								var byteArray = new Uint8Array(arrayBuffer);
-								for (var i = 0; i < byteArray.byteLength; i++) {}
+								var buffer = new Array(byteArray.byteLength);
+								for (var i = 0; i < byteArray.byteLength; i++) {
+									buffer[i] = byteArray[i];
+								}
+								if (buffer.length >= 21) {
+									var h = buffer.slice(0, 6);
+									var hstr = bin2String(h);
+									console.log(hstr);
+									var l = buffer.slice(6, 8);
+									var len = byte2ToUnsignedShort(l,0);
+									console.log(len);
+									layer.msg(len);
+									var v = buffer.slice(8, 9);
+									var n = buffer.slice(9, 10);
+									var p = buffer.slice(10, 12);
+									var m = buffer.slice(12, 14);
+									var s = buffer.slice(14, 16);
+									var f = buffer.slice(16, 18);
+									var b = buffer.slice(18, 20);
+									// var u = buffer.slice(17,19);
+								}
+
 							}
 						};
 						xhr.send(this.makeArr());
@@ -798,6 +820,37 @@
 					},
 				},
 			});
+
+			function bin2String(arr) {
+				if (typeof arr === 'string') {
+					return arr;
+				}
+				var str = '',
+					_arr = arr;
+				for (var i = 0; i < _arr.length; i++) {
+					var one = _arr[i].toString(2),
+						v = one.match(/^1+?(?=0)/);
+					if (v && one.length == 8) {
+						var bytesLength = v[0].length;
+						var store = _arr[i].toString(2).slice(7 - bytesLength);
+						for (var st = 1; st < bytesLength; st++) {
+							store += _arr[st + i].toString(2).slice(2);
+						}
+						str += String.fromCharCode(parseInt(store, 2));
+						i += bytesLength - 1;
+					} else {
+						str += String.fromCharCode(_arr[i]);
+					}
+				}
+				return str;
+			}
+
+			//byte数组转换为无符号short整数
+			function byte2ToUnsignedShort(bytes, off) {
+				var high = bytes[off + 1];
+				var low = bytes[off];
+				return (high << 8 & 0xFF00) | (low & 0xFF);
+			}
 		</script>
 	</body>
 </html>
