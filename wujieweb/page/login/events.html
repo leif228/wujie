@@ -29,7 +29,7 @@
 			</div>
 			<!-- 内容 -->
 			<div class="content" id="content">
-				<div v-for="(item,index) in messageList" :key="index" :id={{item.eventNo}}>{{item.eventName}}(
+				<div v-for="(item,index) in messageList" :key="index" :id="item.eventNo" @click="toggle(item)">{{item.eventName}}(
 					{{item.creatTime}} )</div>
 			</div>
 
@@ -41,22 +41,21 @@
 		<script type="text/javascript">
 			// demo data
 			var messageList = [{ //发送的消息格式
-					eventNo: 'message', //发送类型
-					eventName: '姓名22',
-					creatTime: '2',
-					status: ''
-				}
-			];
+				eventNo: 'message', //发送类型
+				eventName: '姓名22',
+				creatTime: '2',
+				status: ''
+			}];
 			new Vue({
 				el: '#login',
 				data: {
-					messageList: messageList, //所有消息列表
+					messageList: [], //所有消息列表
 					ifEnter: false, //是否聊天状态
 					userName: '游客',
 					userId: '1',
-					oid:'',
-					mobileFzwno:'',
-					owerIp:'',
+					oid: '',
+					mobileFzwno: '',
+					owerIp: '',
 					text: '大家好', //内容
 					ws: null, //wbs
 					message: { //发送的消息格式
@@ -74,6 +73,7 @@
 					this.userId = user.id;
 					this.oid = user.oid;
 					this.owerIp = user.owerIp;
+					this.mobileFzwno = this.oid;
 				},
 				mounted() {
 					let that = this;
@@ -90,29 +90,50 @@
 						this.ifEnter = false;
 
 					},
+					toggle(item) {
+						console.log(item);
+						const orderData = { 'eventNo': item.eventNo,"eventType":item.eventType }
+						sessionStorage.setItem('param', JSON.stringify(orderData))
+						window.location.href = './chat.html';
+						// this.$router.push({
+						//     path:'./chat.html',
+						//     query:{
+						//       eventNo:item.eventNo},
+						//   })
+					},
 					send() {
 						this.message.type = 'message';
 						this.message.content = this.text;
 						// this.ws.onopen();
 					},
 					getMobileFzwno() {
-						if(test){
-							this.mobileFzwno = test.getMobileFzwno();
+						try {
+							if (test) {
+								this.mobileFzwno = test.getMobileFzwno();
+								// this.toLogin();
+							}
+						} catch (e) {
+							console.log(e.message);
 						}
+						this.toLogin();
 					},
 					// 登陆 
 					toLogin() {
-						
+
 						api.myEventList({
 							data: {
 								'oid': this.mobileFzwno,
-								'currIp':this.owerIp
+								'currIp': this.owerIp
 							}
 						}).then((res) => {
 							if (res.code == 0) {
-								layer.msg(成功);
-								this.messageList = res.data;								
-								
+								layer.msg("成功");
+								this.messageList = res.data;
+								// var list = res.data;
+
+								// for (var j = 0, len = list.length; j < len; j++) {
+								// 	this.messageList.push(list.get(j));
+								// }
 								//window.location.href = '../index.html';
 							}
 						}).catch((err) => {

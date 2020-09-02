@@ -57,6 +57,14 @@ const api = {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/myEventList";
 		return yajax_notoken(reqObj);
 	},
+	events(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/events";
+		return yajax_notoken(reqObj);
+	},
+	doEvent(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/doEvent";
+		return yajax_notoken(reqObj);
+	},
 	deviceRegistManage(reqObj = {}) {
 		reqObj.url = domain + "/deviceRegistManage";
 		return yajax(reqObj);

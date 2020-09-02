@@ -41,16 +41,20 @@
 				<div class="content" id="content">
 					<div v-for="(item,index) in messageList" :key="index">
 						<!-- 加入群聊 -->
-						<div class="notice" v-if="item.type=='addUser'">
+						<!-- <div class="notice" v-if="item.type=='addUser'">
 							<h2>{{item.user}}加入群聊</h2>
-						</div>
+						</div> -->
 						<!-- 退出群聊 -->
-						<div class="notice" v-if="item.type=='quit'">
+						<!-- <div class="notice" v-if="item.type=='quit'">
 							<div>{{item.user}}退出群聊</div>
-						</div>
+						</div> -->
 						<!-- 收到消息 -->
-						<div :class="{'myMessage':item.userId==userId}" v-if="item.type=='message'">
+						<!-- <div :class="{'myMessage':item.userId==userId}" v-if="item.type=='message'">
 							<div>{{item.user}}:{{item.time}}</div>
+							<h3 class="message">{{item.content}}</h3>
+						</div> -->
+						<div :class="{'myMessage':item.oid==oid}" >
+							<div>{{item.userName}}:{{item.creatTime}}</div>
 							<h3 class="message">{{item.content}}</h3>
 						</div>
 					</div>
@@ -97,20 +101,24 @@
 			new Vue({
 				el: '#login',
 				data: {
-					messageList: messageList, //所有消息列表
+					messageList: [], //所有消息列表
 					users: [], //用户列表
+					eventNo:'',
+					eventType:'',
 					ifEnter: false, //是否聊天状态
 					userName: '游客',
 					userId: '1',
+					oid: '',
+					owerIp: '',
 					text: '大家好', //内容
 					ws: null, //wbs
 					message: { //发送的消息格式
 						type: '', //发送类型
-						user: '',
-						userId: '',
+						userName: '',
+						oid: '',
 						toUser: '', //消息接收方名
 						content: '', //发送内容
-						time: '' //发送时间
+						creatTime: '' //发送时间
 					}
 				},
 				created() {
@@ -119,10 +127,21 @@
 					// this.deviceSelected = this.deviceList[0].id;
 					var user = JSON.parse(localStorage.getItem("sessionToken"));
 					this.userId = user.id;
+					this.oid = user.oid;
+					this.owerIp = user.owerIp;
+					
+					const dataB = JSON.parse(sessionStorage.getItem('param'))
+					console.log("传来的参数==" + dataB.eventNo)
+					this.eventNo = dataB.eventNo;
+					this.eventType = dataB.eventType;
 				},
+				/* watch: {
+					// 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
+					'$route': 'getParams'
+				}, */
 				mounted() {
 					let that = this;
-					// this.getVerifyCode();
+					this.toLogin();
 				},
 				methods: {
 					// 退出聊天室
@@ -134,39 +153,49 @@
 						this.ifEnter = false;
 
 					},
+					/* getParams() {
+						// 取到路由带过来的参数
+						var routerParams = this.$route.query.eventNo
+						// 将数据放在当前组件的数据内
+						console.log("传来的参数==" + routerParams)
+						this.eventNo = routerParams
+					}, */
 					send() {
 						this.message.type = 'message';
 						this.message.content = this.text;
 						// this.ws.onopen();
-					},
-					// 登陆 
-					toLogin() {
-
-						if (!this.username) {
-							errMsg("请输入用户名")
-							return;
-						}
-						if (!this.password) {
-							errMsg("请输入密码")
-							return;
-						}
-						api.login({
+						api.doEvent({
 							data: {
-								'username': this.username,
-								'password': this.password
+								'content': this.text,
+								'oid': this.oid,
+								'eventNo': this.eventNo,
+								'eventType': String(this.eventType),
+								'currIp': this.owerIp
 							}
 						}).then((res) => {
 							if (res.code == 0) {
-								layer.msg(注册成功);
-								// localStorage.setItem("sessionToken", res.data.userInfo)
-								// localStorage.setItem("token", res.data.token)
-								// sessionStorage.setItem("sessionToken", res.data.userInfo);
-								// sessionStorage.setItem("token", res.data.token);
-								window.location.href = '../index.html';
+								layer.msg("成功");
+								this.messageList = [];								
+								this.toLogin();
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
-							// this.getVerifyCode();
+						});
+					},
+					// 登陆 
+					toLogin() {
+						api.events({
+							data: {
+								'eventNo': this.eventNo,
+								'currIp': this.owerIp
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg("成功");
+								this.messageList = res.data;
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
 						});
 					},
 				},
