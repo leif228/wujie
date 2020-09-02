@@ -56,6 +56,9 @@
 				methods: {
 
 					toRegist() {
+						let token = localStorage.getItem("token");
+						let url_no_token = localStorage.getItem("url_no_token");
+						layer.msg("token"+token+"(url_no_token="+url_no_token+")");
 						if(test){
 							test.deviceComp(this.deviceName);
 						}
@@ -77,7 +80,7 @@
 						};
 					},
 					deviceComp() {
-
+						
 						api.deviceComp({
 							data: {}
 						}).then((res) => {
@@ -91,6 +94,7 @@
 						}).catch((err) => {
 							layer.msg(err.msg);
 						});
+						
 					},
 
 				},

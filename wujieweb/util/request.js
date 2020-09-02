@@ -10,7 +10,7 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-const rootIp = "192.168.3.60";
+const rootIp = "192.168.4.16";
 const domain = "http://" + rootIp + ":9999";
 // const domain = "http://192.168.3.60:9999";
 
@@ -23,7 +23,7 @@ const api = {
 	},
 	addrInit(reqObj = {}) {
 		reqObj.url = domain + "/addrInit";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	deviceType(reqObj = {}) {
 		reqObj.url = domain + "/deviceType";
@@ -31,15 +31,15 @@ const api = {
 	},
 	cityByP(reqObj = {}) {
 		reqObj.url = domain + "/cityByP";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	areaByC(reqObj = {}) {
 		reqObj.url = domain + "/areaByC";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	streetByA(reqObj = {}) {
 		reqObj.url = domain + "/streetByA";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	secDeviceRegist(reqObj = {}) {
 		reqObj.url = domain + "/secDeviceRegist";
@@ -51,11 +51,11 @@ const api = {
 	},
 	deviceRegistElse(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/deviceRegistElse";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	myEventList(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/myEventList";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	deviceRegistManage(reqObj = {}) {
 		reqObj.url = domain + "/deviceRegistManage";
@@ -63,27 +63,27 @@ const api = {
 	},
 	searchNode(reqObj = {}) {
 		reqObj.url = domain + "/searchNode";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	tcpClientConnect(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/tcpClientConnect";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	getTcpClientConnectInfo(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/getTcpClientConnectInfo";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	owerLoginNotify(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/owerLoginNotify";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	wjhttp(reqObj = {}) {
 		reqObj.url = "http://" + rootIp + ":9999" + "/wjhttp";
-		return yajax2(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	getFullFzwno(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.ip + ":9999" + "/getFullFzwno";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	getChildNodes(reqObj = {}) {
 		reqObj.url = domain + "/getChildNodes";
@@ -95,7 +95,7 @@ const api = {
 	},
 	userRegist(reqObj = {}) {
 		reqObj.url = domain + "/userRegist";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	// 退出登录
 	logout(reqObj = {}) {
@@ -123,7 +123,7 @@ const api = {
 	// 登陆
 	login(reqObj = {}) {
 		reqObj.url = domain + "/userLogin";
-		return yajax(reqObj);
+		return yajax_notoken(reqObj);
 	},
 	// 获取左侧菜单
 	getLeftMenus(reqObj = {}) {
@@ -167,7 +167,7 @@ const api = {
 
 };
 // 同步执行ajax字节数组
-function yajax2({
+function yajax_notoken({
 	type = "POST",
 	url,
 	data = {},
@@ -190,15 +190,15 @@ function yajax2({
 			data: data,
 			timeout: timeout,
 			xhrFields: {
-				withCredentials: true // 设置运行跨域操作
+				withCredentials: false // 设置运行跨域操作
 			},
 			beforeSend: (XMLHttpRequest) => {
 				// if(url_no_token==0){
 					
 				// }else{
-					XMLHttpRequest.setRequestHeader("Authorization", token);
+					// XMLHttpRequest.setRequestHeader("Authorization", token);
 				// }
-				XMLHttpRequest.setRequestHeader("Content-type", "application/octet-stream");
+				// XMLHttpRequest.setRequestHeader("Content-type", "application/octet-stream");
 			},
 			success(res) {
 				layerIdx ? layer.close(layerIdx) : '';
