@@ -42,6 +42,7 @@
 				data: {
 					deviceSelected: '', 
 					deviceName: '', 
+					file: '', 
 					deviceList:[],
 				},
 				created() {
@@ -60,7 +61,7 @@
 						// let url_no_token = localStorage.getItem("url_no_token");
 						// layer.msg("token"+token+"(url_no_token="+url_no_token+")");
 						if(test){
-							test.deviceComp(this.deviceName);
+							test.deviceComp(this.deviceName,this.file);
 						}
 					},
 					toIndex() {
@@ -74,6 +75,7 @@
 							for (j = 0, len = arr.length; j < len; j++) {
 								if (this.deviceSelected == arr[j].id) {
 									this.deviceName = arr[j].compEn;
+									this.file = arr[j].file;
 									break;
 								}
 							}
@@ -89,6 +91,7 @@
 									this.deviceList = res.data;
 									this.deviceSelected = this.deviceList[0].id;
 									this.deviceName = this.deviceList[0].compEn;
+									this.file = this.deviceList[0].file;
 								}
 							}
 						}).catch((err) => {
