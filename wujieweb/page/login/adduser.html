@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+		<style type="text/css">
+			.content {
+
+				height: 100%;
+				/* border: solid 1px red; */
+				overflow: scroll;
+				overflow-x: hidden;
+				padding: 0 20px;
+			}
+
+			.isMe {
+				color: red;
+			}
+
+			.message {
+				border: solid 2px black;
+				display: inline-block;
+			}
+
+			.myMessage {
+				text-align: right;
+			}
+
+			.div-inline {
+				display: inline-block
+			}
+		</style>
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>添加关系</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+						<!-- 内容 -->
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-tooid"></label>
+							<input type="text" v-model="tooid" name="tooid" id="LAY-user-login-tooid" maxlength="100" lay-verify="required"
+							 placeholder="输入对方oid号" class="layui-input">
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-devicetype"></label>
+							<select id="LAY-user-login-devicetype" v-model="relationSelected" @change="getRelationSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in relationList">{{coupon.devType}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">添 加</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			// demo data
+			new Vue({
+				el: '#login',
+				data: {
+					tooid: '',
+					relationList: [],
+					relationSelected: '',
+					userId: '',
+					oid: '',
+					owerIp: ''
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
+					// this.userSelected = this.userList[0].id;
+					// this.deviceSelected = this.deviceList[0].id;
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
+					this.oid = user.oid;
+					this.owerIp = user.owerIp;
+				},
+				mounted() {
+					let that = this;
+					this.getRelationTypes();
+				},
+				methods: {
+					getRelationSelected() {
+						//获取选中的优惠券
+						console.log(this.relationSelected);
+					},
+					getRelationTypes() {
+						api.getRelationTypes({
+							data: {
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.relationList = res.data;
+									this.relationSelected = this.relationList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					// 登陆 
+					toLogin() {
+
+						api.addUser({
+							data: {
+								"relationId": this.relationSelected,
+								"tooid": this.tooid,
+								'oid': this.oid,
+								'currIp': this.owerIp
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg("成功");
+								window.location.href = '../users.html';
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+							// this.getVerifyCode();
+						});
+					},
+				},
+			});
+		</script>
+	</body>
+</html>

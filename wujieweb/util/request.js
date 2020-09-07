@@ -105,6 +105,18 @@ const api = {
 		reqObj.url = domain + "/userRegist";
 		return yajax_notoken(reqObj);
 	},
+	addUser(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/addUser";
+		return yajax_notoken(reqObj);
+	},
+	myUserList(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/myUserList";
+		return yajax_notoken(reqObj);
+	},
+	getRelationTypes(reqObj = {}) {
+		reqObj.url = domain + "/getRelationTypes";
+		return yajax(reqObj);
+	},
 	// 退出登录
 	logout(reqObj = {}) {
 		reqObj.url = domain + "/PcUser/removeSession";
@@ -202,9 +214,9 @@ function yajax_notoken({
 			},
 			beforeSend: (XMLHttpRequest) => {
 				// if(url_no_token==0){
-					
+
 				// }else{
-					// XMLHttpRequest.setRequestHeader("Authorization", token);
+				// XMLHttpRequest.setRequestHeader("Authorization", token);
 				// }
 				// XMLHttpRequest.setRequestHeader("Content-type", "application/octet-stream");
 			},
@@ -266,10 +278,10 @@ function yajax({
 			},
 			beforeSend: (XMLHttpRequest) => {
 				// if(url_no_token==0){
-					
+
 				// }else{
-					XMLHttpRequest.setRequestHeader("Authorization", token);
-					XMLHttpRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
+				XMLHttpRequest.setRequestHeader("Authorization", token);
+				XMLHttpRequest.setRequestHeader("Access-Control-Allow-Origin", "*");
 				// }
 			},
 			success(res) {

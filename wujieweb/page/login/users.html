@@ -20,17 +20,35 @@
 			.isMe {
 				color: red;
 			}
+
+			.message {
+				border: solid 2px black;
+				display: inline-block;
+			}
+
+			.myMessage {
+				text-align: right;
+			}
+
+			.div-inline {
+				display: inline-block
+			}
 		</style>
 	</head>
 	<body layadmin-themealias="classic-black-header">
 		<div id="login">
 			<div style="height: 25px;background-color: #009F95;">
-				<p>我的事件记录</p>
+				<div class="div-inline">
+					<p>关系列表</p>
+				</div>
+				<div class="div-inline message" style="margin-left: 30px;width: 20px; text-align:center;">
+					<h3>+</h3>
+				</div>
 			</div>
 			<!-- 内容 -->
 			<div class="content" id="content">
-				<div v-for="(item,index) in messageList" :key="index" :id="item.eventNo" @click="toggle(item)">{{item.eventName}}(
-					{{item.creatTime}} )</div>
+				<div v-for="(item,index) in messageList" :key="index" >{{item.userName}}(
+					{{item.relation}} )</div>
 			</div>
 
 
@@ -41,29 +59,19 @@
 		<script type="text/javascript">
 			// demo data
 			var messageList = [{ //发送的消息格式
-				eventNo: 'message', //发送类型
-				eventName: '姓名22',
-				creatTime: '2',
-				status: ''
+				userName: '姓名22',
+				relation: '2'
 			}];
 			new Vue({
 				el: '#login',
 				data: {
 					messageList: [], //所有消息列表
-					ifEnter: false, //是否聊天状态
-					userName: '游客',
 					userId: '',
 					oid: '',
-					mobileFzwno: '',
 					owerIp: '',
-					text: '大家好', //内容
-					ws: null, //wbs
 					message: { //发送的消息格式
-						eventNo: '', //发送类型
-						eventType: '', //发送类型
-						eventName: '',
-						creatTime: '',
-						status: ''
+						relation: '', //发送类型
+						userName: ''
 					}
 				},
 				created() {
@@ -74,56 +82,18 @@
 					this.userId = user.id;
 					this.oid = user.oid;
 					this.owerIp = user.owerIp;
-					this.mobileFzwno = this.oid;
 				},
 				mounted() {
 					let that = this;
-					this.getMobileFzwno();
-					// this.toLogin();
+					this.toLogin();
 				},
-				methods: {
-					// 退出聊天室
-					quit() {
-						this.message.type = 'quit';
-						this.message.content = this.text;
-						this.ws.onopen();
-						this.ws.close();
-						this.ifEnter = false;
-
-					},
-					toggle(item) {
-						console.log(item);
-						const orderData = { 'eventNo': item.eventNo,"eventType":item.eventType }
-						sessionStorage.setItem('param', JSON.stringify(orderData))
-						window.location.href = './chat.html';
-						// this.$router.push({
-						//     path:'./chat.html',
-						//     query:{
-						//       eventNo:item.eventNo},
-						//   })
-					},
-					send() {
-						this.message.type = 'message';
-						this.message.content = this.text;
-						// this.ws.onopen();
-					},
-					getMobileFzwno() {
-						try {
-							if (test) {
-								this.mobileFzwno = test.getMobileFzwno();
-								// this.toLogin();
-							}
-						} catch (e) {
-							console.log(e.message);
-						}
-						this.toLogin();
-					},
+				methods: {					
 					// 登陆 
 					toLogin() {
 
-						api.myEventList({
+						api.myUserList({
 							data: {
-								'oid': this.mobileFzwno,
+								'oid': this.oid,
 								'currIp': this.owerIp
 							}
 						}).then((res) => {
