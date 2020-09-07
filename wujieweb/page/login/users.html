@@ -41,7 +41,7 @@
 				<div class="div-inline">
 					<p>关系列表</p>
 				</div>
-				<div class="div-inline message" style="margin-left: 30px;width: 20px; text-align:center;">
+				<div class="div-inline message" style="margin-left: 30px;width: 20px; text-align:center;" @click="toAdd">
 					<h3>+</h3>
 				</div>
 			</div>
@@ -87,7 +87,10 @@
 					let that = this;
 					this.toLogin();
 				},
-				methods: {					
+				methods: {	
+					toAdd() {
+						window.location.href = './adduser.html';
+					},
 					// 登陆 
 					toLogin() {
 

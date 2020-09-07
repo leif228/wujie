@@ -27,7 +27,7 @@
 							<input type="password" v-model="password" name="password" id="LAY-user-login-password" maxlength="16" lay-verify="required"
 							 placeholder="密码" class="layui-input">
 						</div> -->
-						
+
 						<!-- <div class="layui-form-item">
 							<div class="layui-row">
 								<div class="layui-col-xs7">
@@ -59,6 +59,9 @@
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toEvent">事件</button>
 						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toRelation">关系</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -71,8 +74,8 @@
 				data: {
 					verifyCode: null, // 验证码图片
 					username: '', // 用户名
-					userId:'',
-					password: ''// 密码
+					userId: '',
+					password: '' // 密码
 				},
 				created() {
 					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现
@@ -97,26 +100,29 @@
 							layer.msg(err.errorMessage);
 						});
 					}, */
-					toRegist(){
-						if(this.userId == 1)
+					toRegist() {
+						if (this.userId == 1)
 							window.location.href = './mdregist.html';
 						else
 							window.location.href = './edregist.html';
 					},
-					toNodeConn(){
+					toNodeConn() {
 						window.location.href = './nodeconn.html';
 					},
-					toTree(){
+					toTree() {
 						window.location.href = './tree.html';
 					},
-					toDeviceComp(){
+					toDeviceComp() {
 						window.location.href = './devcomp.html';
 					},
-					toEvent(){
+					toEvent() {
 						window.location.href = './events.html';
 					},
-					
-					
+					toRelation() {
+						window.location.href = './users.html';
+					},
+
+
 					// 登陆 
 					toLogin() {
 
@@ -124,11 +130,11 @@
 							errMsg("请输入用户名")
 							return;
 						}
-						if (!this.password ) {
+						if (!this.password) {
 							errMsg("请输入密码")
 							return;
 						}
-						
+
 						// if (!this.addr || this.addr.length < 11) {
 						// 	errMsg("地址")
 						// 	return;
