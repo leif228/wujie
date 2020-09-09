@@ -30,6 +30,9 @@
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toIndex">主页</button>
 						</div>
+						<!-- <div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toSure">认证</button>
+						</div> -->
 					</div>
 				</div>
 			</div>
@@ -67,6 +70,11 @@
 					toIndex() {
 						window.location.href = './index.html';
 					},
+					/* toSure() {
+						if(test){
+							test.toSure();
+						}
+					}, */
 					getDeviceSelected() {
 						//获取选中的优惠券
 						console.log(this.deviceSelected);

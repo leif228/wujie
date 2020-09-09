@@ -53,7 +53,7 @@
 							<div>{{item.user}}:{{item.time}}</div>
 							<h3 class="message">{{item.content}}</h3>
 						</div> -->
-						<div :class="{'myMessage':item.oid==oid}" >
+						<div :class="{'myMessage':item.oid==mobileFzwno}" >
 							<div>{{item.userName}}:{{item.creatTime}}</div>
 							<h3 class="message">{{item.content}}</h3>
 						</div>
@@ -105,10 +105,12 @@
 					users: [], //用户列表
 					eventNo:'',
 					eventType:'',
+					genOid:'',
 					ifEnter: false, //是否聊天状态
 					userName: '游客',
 					userId: '1',
 					oid: '',
+					mobileFzwno: '',
 					owerIp: '',
 					text: '大家好', //内容
 					ws: null, //wbs
@@ -134,6 +136,7 @@
 					console.log("传来的参数==" + dataB.eventNo)
 					this.eventNo = dataB.eventNo;
 					this.eventType = dataB.eventType;
+					this.genOid = dataB.genOid;
 				},
 				/* watch: {
 					// 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
@@ -141,7 +144,8 @@
 				}, */
 				mounted() {
 					let that = this;
-					this.toLogin();
+					this.getMobileFzwno();
+					// this.toLogin();
 				},
 				methods: {
 					// 退出聊天室
@@ -153,13 +157,17 @@
 						this.ifEnter = false;
 
 					},
-					/* getParams() {
-						// 取到路由带过来的参数
-						var routerParams = this.$route.query.eventNo
-						// 将数据放在当前组件的数据内
-						console.log("传来的参数==" + routerParams)
-						this.eventNo = routerParams
-					}, */
+					getMobileFzwno() {
+						try {
+							if (test) {
+								this.mobileFzwno = test.getMobileFzwno();
+								 this.toLogin();
+							}
+						} catch (e) {
+							console.log(e.message);
+							this.mobileFzwno = this.oid;
+						}
+					},
 					send() {
 						this.message.type = 'message';
 						this.message.content = this.text;
@@ -167,9 +175,10 @@
 						api.doEvent({
 							data: {
 								'content': this.text,
-								'oid': this.oid,
+								'oid': this.mobileFzwno,
 								'eventNo': this.eventNo,
 								'eventType': String(this.eventType),
+								'genOid': this.genOid,
 								'currIp': this.owerIp
 							}
 						}).then((res) => {
@@ -187,6 +196,7 @@
 						api.events({
 							data: {
 								'eventNo': this.eventNo,
+								'oid': this.mobileFzwno,
 								'currIp': this.owerIp
 							}
 						}).then((res) => {

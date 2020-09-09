@@ -113,6 +113,10 @@ const api = {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/myUserList";
 		return yajax_notoken(reqObj);
 	},
+	genEvent(reqObj = {}) {
+		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/genEvent";
+		return yajax_notoken(reqObj);
+	},
 	getRelationTypes(reqObj = {}) {
 		reqObj.url = domain + "/getRelationTypes";
 		return yajax(reqObj);

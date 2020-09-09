@@ -62,6 +62,9 @@
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toRelation">关系</button>
 						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toGenEvent">健康事件触发</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -75,6 +78,9 @@
 					verifyCode: null, // 验证码图片
 					username: '', // 用户名
 					userId: '',
+					oid: '',
+					mobileFzwno: '',
+					owerIp: '',
 					password: '' // 密码
 				},
 				created() {
@@ -83,23 +89,15 @@
 					// this.deviceSelected = this.deviceList[0].id;
 					var user = JSON.parse(localStorage.getItem("sessionToken"));
 					this.userId = user.id;
+					this.oid = user.oid;
+					this.owerIp = user.owerIp;
 				},
 				mounted() {
 					let that = this;
+					this.getMobileFzwno();
 					// this.getVerifyCode();
 				},
 				methods: {
-					// 获取图片验证码
-					/* getVerifyCode(){
-						api.getVerifyCode()
-						.then((res) => {
-							if(res.code == 0){
-								this.verifyCode = res.result;
-							}
-						}).catch((err) => {
-							layer.msg(err.errorMessage);
-						});
-					}, */
 					toRegist() {
 						if (this.userId == 1)
 							window.location.href = './mdregist.html';
@@ -121,45 +119,34 @@
 					toRelation() {
 						window.location.href = './users.html';
 					},
+					getMobileFzwno() {
+						try {
+							if (test) {
+								this.mobileFzwno = test.getMobileFzwno();
+							}
+						} catch (e) {
+							console.log(e.message);
+							this.mobileFzwno = this.oid;
+						}
+					},
 
 
 					// 登陆 
-					toLogin() {
-
-						if (!this.username) {
-							errMsg("请输入用户名")
-							return;
-						}
-						if (!this.password) {
-							errMsg("请输入密码")
-							return;
-						}
-
-						// if (!this.addr || this.addr.length < 11) {
-						// 	errMsg("地址")
-						// 	return;
-						// }
-						/* if(!this.vercode ||  this.vercode.length < 4){
-							errMsg("请输入验证码")
-							return;
-						} */
-						api.login({
+					toGenEvent() {
+						api.genEvent({
 							data: {
-								'username': this.username,
-								'password': this.password
+								'oid': this.mobileFzwno,
+								'eventType': 1,
+								'content':'健康事件开始了！',
+								'currIp': this.owerIp
 							}
 						}).then((res) => {
 							if (res.code == 0) {
-								layer.msg(注册成功);
-								// localStorage.setItem("sessionToken", res.data.userInfo)
-								// localStorage.setItem("token", res.data.token)
-								// sessionStorage.setItem("sessionToken", res.data.userInfo);
-								// sessionStorage.setItem("token", res.data.token);
-								window.location.href = '../index.html';
+								layer.msg("成功");
+								window.location.href = './events.html';
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
-							// this.getVerifyCode();
 						});
 					},
 				},

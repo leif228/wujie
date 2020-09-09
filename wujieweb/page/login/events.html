@@ -44,6 +44,7 @@
 				eventNo: 'message', //发送类型
 				eventName: '姓名22',
 				creatTime: '2',
+				genOid: '',
 				status: ''
 			}];
 			new Vue({
@@ -63,6 +64,7 @@
 						eventType: '', //发送类型
 						eventName: '',
 						creatTime: '',
+						genOid: '',
 						status: ''
 					}
 				},
@@ -74,7 +76,6 @@
 					this.userId = user.id;
 					this.oid = user.oid;
 					this.owerIp = user.owerIp;
-					this.mobileFzwno = this.oid;
 				},
 				mounted() {
 					let that = this;
@@ -93,7 +94,7 @@
 					},
 					toggle(item) {
 						console.log(item);
-						const orderData = { 'eventNo': item.eventNo,"eventType":item.eventType }
+						const orderData = { 'eventNo': item.eventNo,"eventType":item.eventType,"genOid":item.genOid }
 						sessionStorage.setItem('param', JSON.stringify(orderData))
 						window.location.href = './chat.html';
 						// this.$router.push({
@@ -115,6 +116,7 @@
 							}
 						} catch (e) {
 							console.log(e.message);
+							this.mobileFzwno = this.oid;
 						}
 						this.toLogin();
 					},
