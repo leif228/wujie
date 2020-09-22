@@ -29,7 +29,7 @@
 			</div>
 			<!-- 内容 -->
 			<div class="content" id="content">
-				<div v-for="(item,index) in messageList" :key="index" :id="item.eventNo" @click="toggle(item)">{{item.eventName}}(
+				<div v-for="(item,index) in messageList" :key="index" :id="item.eventNo" @click="toggle(item)" style="margin-top: 15px;height: 16px;">{{item.eventName}}(
 					{{item.creatTime}} )</div>
 			</div>
 
@@ -94,7 +94,11 @@
 					},
 					toggle(item) {
 						console.log(item);
-						const orderData = { 'eventNo': item.eventNo,"eventType":item.eventType,"genOid":item.genOid }
+						const orderData = {
+							'eventNo': item.eventNo,
+							"eventType": item.eventType,
+							"genOid": item.genOid
+						}
 						sessionStorage.setItem('param', JSON.stringify(orderData))
 						window.location.href = './chat.html';
 						// this.$router.push({

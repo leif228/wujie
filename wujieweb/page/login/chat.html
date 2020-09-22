@@ -53,15 +53,15 @@
 							<div>{{item.user}}:{{item.time}}</div>
 							<h3 class="message">{{item.content}}</h3>
 						</div> -->
-						<div :class="{'myMessage':item.oid==mobileFzwno}" >
-							<div>{{item.userName}}:{{item.creatTime}}</div>
+						<div :class="{'myMessage':item.oid==mobileFzwno}">
+							<div><span style="color: #0000FF;">{{item.userName}}</span>:{{item.creatTime}}</div>
 							<h3 class="message">{{item.content}}</h3>
 						</div>
 					</div>
 				</div>
 				<!-- 编辑栏 -->
-				<div>
-					<Input v-model="text" show-word-limit type="textarea" placeholder="Enter something..." style="width: 200px" />
+				<div style="margin-top: 5px;">
+					<Input v-model="text" show-word-limit type="textarea" placeholder="Enter something..." style="width: 300px;height: 40px;" />
 					<Button type="info" @click="send()">发送</Button>
 					<!-- <Button type="error" @click="quit()">退出</Button> -->
 				</div>
@@ -98,14 +98,15 @@
 					time: '15:35' //发送时间
 				}
 			];
-			new Vue({
+			
+			var vueObj = new Vue({
 				el: '#login',
 				data: {
 					messageList: [], //所有消息列表
 					users: [], //用户列表
-					eventNo:'',
-					eventType:'',
-					genOid:'',
+					eventNo: '',
+					eventType: '',
+					genOid: '',
 					ifEnter: false, //是否聊天状态
 					userName: '游客',
 					userId: '1',
@@ -131,7 +132,7 @@
 					this.userId = user.id;
 					this.oid = user.oid;
 					this.owerIp = user.owerIp;
-					
+
 					const dataB = JSON.parse(sessionStorage.getItem('param'))
 					console.log("传来的参数==" + dataB.eventNo)
 					this.eventNo = dataB.eventNo;
@@ -161,7 +162,7 @@
 						try {
 							if (test) {
 								this.mobileFzwno = test.getMobileFzwno();
-								 this.toLogin();
+								this.toLogin();
 							}
 						} catch (e) {
 							console.log(e.message);
@@ -172,13 +173,13 @@
 						this.message.type = 'message';
 						this.message.content = this.text;
 						// this.ws.onopen();
-						api.doEvent({
+						/* api.doEvent({
 							data: {
 								'content': this.text,
 								'oid': this.mobileFzwno,
 								'eventNo': this.eventNo,
 								'eventType': String(this.eventType),
-								'genOid': this.genOid,
+								'bussInfoId': '1',
 								'currIp': this.owerIp
 							}
 						}).then((res) => {
@@ -189,10 +190,34 @@
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
-						});
+						}); */
+						try {
+							if (test) {
+								var result = test.sendChatMsg(this.eventNo, this.text)
+								if ('0' == result) {
+									// layer.msg("成功");
+									// this.messageList = [];
+									// this.toLogin();
+								} else {
+									layer.msg(result);
+								}
+							}
+						} catch (e) {
+							layer.msg(e.message);
+							console.log(e.message);
+						}
 					},
 					// 登陆 
 					toLogin() {
+						/* try {
+							if (test) {
+								this.tcpReceventNo = test.getEventNo();
+								this.eventNo = this.tcpReceventNo;
+							}
+						} catch (e) {
+							console.log(e.message);
+						} */
+
 						api.events({
 							data: {
 								'eventNo': this.eventNo,
@@ -201,6 +226,7 @@
 							}
 						}).then((res) => {
 							if (res.code == 0) {
+								this.messageList = [];
 								layer.msg("成功");
 								this.messageList = res.data;
 							}
@@ -210,6 +236,10 @@
 					},
 				},
 			});
+			function flushChat(eventNo){
+				vueObj.data.eventNo = eventNo;
+				vueObj.methods.toLogin();
+			};
 		</script>
 	</body>
 </html>
