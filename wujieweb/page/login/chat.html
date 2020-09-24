@@ -98,7 +98,7 @@
 					time: '15:35' //发送时间
 				}
 			];
-			
+
 			var vueObj = new Vue({
 				el: '#login',
 				data: {
@@ -113,7 +113,7 @@
 					oid: '',
 					mobileFzwno: '',
 					owerIp: '',
-					text: '大家好', //内容
+					text: 'hello ', //内容
 					ws: null, //wbs
 					message: { //发送的消息格式
 						type: '', //发送类型
@@ -145,6 +145,8 @@
 				}, */
 				mounted() {
 					let that = this;
+					// window.setEventNo = this.setEventNo(eventNo);
+					// window.toLogin = this.toLogin();
 					this.getMobileFzwno();
 					// this.toLogin();
 				},
@@ -157,6 +159,10 @@
 						this.ws.close();
 						this.ifEnter = false;
 
+					},
+					setEventNo(eventNo){
+						this.eventNo = eventNo;
+						layer.msg(this.eventNo);
 					},
 					getMobileFzwno() {
 						try {
@@ -217,7 +223,8 @@
 						} catch (e) {
 							console.log(e.message);
 						} */
-
+						// layer.msg(this.eventNo);
+						
 						api.events({
 							data: {
 								'eventNo': this.eventNo,
@@ -227,7 +234,7 @@
 						}).then((res) => {
 							if (res.code == 0) {
 								this.messageList = [];
-								layer.msg("成功");
+								//layer.msg("成功");
 								this.messageList = res.data;
 							}
 						}).catch((err) => {
@@ -236,9 +243,11 @@
 					},
 				},
 			});
-			function flushChat(eventNo){
-				vueObj.data.eventNo = eventNo;
-				vueObj.methods.toLogin();
+
+			function flushChat(eventNo) {
+				 // alert(eventNo);
+				vueObj.setEventNo(eventNo);
+				vueObj.toLogin();
 			};
 		</script>
 	</body>

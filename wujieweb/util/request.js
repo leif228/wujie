@@ -201,9 +201,9 @@ function yajax_notoken({
 	return new Promise((resolve, reject) => {
 		let layerIdx = null;
 		if (loading) {
-			layerIdx = layer.msg('加载中', {
-				icon: 16
-			});
+			// layerIdx = layer.msg('加载中', {
+			// 	icon: 16
+			// });
 		}
 		let token = localStorage.getItem("token");
 		let url_no_token = localStorage.getItem("url_no_token");
