@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>选择行业</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-o"></label>
+							<select id="LAY-user-login-o" v-model="oSelected" @change="getOSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in oList">{{coupon.className}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-w"></label>
+							<select id="LAY-user-login-w" v-model="wSelected" @change="getWSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in wList">{{coupon.className}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-t"></label>
+							<select id="LAY-user-login-t" v-model="tSelected" @change="getTSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in tList">{{coupon.className}}</option>
+							</select>
+						</div>
+						<div class="layui-form-item">
+							<label class="layadmin-user-login-icon layui-icon layui-icon-read" for="LAY-user-login-f"></label>
+							<select id="LAY-user-login-f" v-model="fSelected" @change="getFSelected" style="padding-left: 38px;height: 38px;display: block;width: 100%;">
+								<option :value="coupon.id" v-for="coupon in fList">{{coupon.className}}</option>
+							</select>
+						</div>
+
+
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">注 册</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toIndex">主 页</button>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#login',
+				data: {
+					currIp: "",
+					preip: "",
+					preport: "",
+					loginfzwno: "",
+					fzwno: "",
+					owerip: "",
+					owerport: "",
+					owerfzwno: "",
+					userId: '',
+					userName: '',
+					passWord: '',
+					owerServerIp: '',
+					ip: '',
+					port: '',
+					oList: [],
+					oSelected: '',
+					wList: [],
+					wSelected: '',
+					tList: [],
+					tSelected: '',
+					fList: [],
+					fSelected: ''
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
+					// this.deviceSelected = this.deviceList[0].id;
+
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
+					this.userName = user.userName;
+					this.passWord = user.passWord;
+					this.owerServerIp = user.owerIp;
+				},
+				mounted() {
+					let that = this;
+					this.getClass1st()
+				},
+				methods: {
+					getClass1st() {
+						api.getClass1st({
+							data: {}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.oList = res.data;
+									this.oSelected = this.oList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					toIndex() {
+						//获取选中的优惠券
+						window.location.href = './index.html';
+						// layer.msg(this.userSelected);
+					},
+					getOSelected() {
+						//获取选中的优惠券
+						console.log(this.oSelected);
+
+						api.getClass2nd({
+							data: {
+								'id': this.oSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								this.tList=[];
+								this.tSelected='';
+								this.fList=[];
+								this.fSelected='';
+								if (res.data.length > 0) {
+									this.wList = res.data;
+									this.wSelected = this.wList[0].id;
+								}
+
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getWSelected() {
+						//获取选中的优惠券
+						console.log(this.wSelected);
+						api.getClass3rd({
+							data: {
+								'id': this.wSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								this.fList=[];
+								this.fSelected='';
+								if (res.data.length > 0) {
+									this.tList = res.data;
+									this.tSelected = this.tList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getTSelected() {
+						//获取选中的优惠券
+						console.log(this.tSelected);
+
+						api.getClass4th({
+							data: {
+								'id': this.tSelected
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.fList = res.data;
+									this.fSelected = this.fList[0].id;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getFSelected() {
+						//获取选中的优惠券
+						console.log(this.fSelected);
+
+					},
+					// 登陆 
+					toLogin() {
+
+						var tid = 0;
+						if (this.fSelected != '') {
+							tid = this.fSelected;
+						} else if (this.tSelected != '') {
+							tid = this.tSelected;
+						} else if (this.wSelected != '') {
+							tid = this.wSelected;
+						} else {
+							tid = this.oSelected;
+						}
+
+						api.userTrade({
+							data: {
+								'tid': tid
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								layer.msg(res.msg);
+								
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+
+				},
+			});
+		</script>
+	</body>
+</html>

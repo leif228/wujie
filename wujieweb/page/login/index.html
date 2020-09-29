@@ -45,6 +45,9 @@
 							<button class="layui-btn layui-btn-fluid" @click="toLogin" lay-submit="" lay-filter="LAY-user-login-submit">登 录</button>
 						</div> -->
 						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toTrade">选择行业</button>
+						</div>
+						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toRegist">设备注册</button>
 						</div>
 						<div class="layui-form-item">
@@ -98,6 +101,9 @@
 					// this.getVerifyCode();
 				},
 				methods: {
+					toTrade() {
+						window.location.href = './trade.html';
+					},
 					toRegist() {
 						if (this.userId == 1)
 							window.location.href = './mdregist.html';

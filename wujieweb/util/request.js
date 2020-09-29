@@ -121,6 +121,26 @@ const api = {
 		reqObj.url = domain + "/getRelationTypes";
 		return yajax(reqObj);
 	},
+	getClass1st(reqObj = {}) {
+		reqObj.url = domain + "/getClass1st";
+		return yajax(reqObj);
+	},
+	getClass2nd(reqObj = {}) {
+		reqObj.url = domain + "/getClass2nd";
+		return yajax(reqObj);
+	},
+	getClass3rd(reqObj = {}) {
+		reqObj.url = domain + "/getClass3rd";
+		return yajax(reqObj);
+	},
+	getClass4th(reqObj = {}) {
+		reqObj.url = domain + "/getClass4th";
+		return yajax(reqObj);
+	},
+	userTrade(reqObj = {}) {
+		reqObj.url = domain + "/userTrade";
+		return yajax(reqObj);
+	},
 	// 退出登录
 	logout(reqObj = {}) {
 		reqObj.url = domain + "/PcUser/removeSession";
@@ -201,9 +221,9 @@ function yajax_notoken({
 	return new Promise((resolve, reject) => {
 		let layerIdx = null;
 		if (loading) {
-			// layerIdx = layer.msg('加载中', {
-			// 	icon: 16
-			// });
+			layerIdx = layer.msg('加载中', {
+				icon: 16
+			});
 		}
 		let token = localStorage.getItem("token");
 		let url_no_token = localStorage.getItem("url_no_token");
