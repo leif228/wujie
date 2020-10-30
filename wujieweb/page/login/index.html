@@ -66,7 +66,16 @@
 							<button class="layui-btn layui-btn-fluid" @click="toRelation">关系</button>
 						</div>
 						<div class="layui-form-item">
-							<button class="layui-btn layui-btn-fluid" @click="toGenEvent">健康事件触发</button>
+							<button class="layui-btn layui-btn-fluid" @click="toGenEvent">健康事件</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toUserInfo">用户信息</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLightOn">开灯</button>
+						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toLightOff">关灯</button>
 						</div>
 					</div>
 				</div>
@@ -101,6 +110,19 @@
 					// this.getVerifyCode();
 				},
 				methods: {
+					toLightOff() {
+						if(test){
+							test.toLightOff();
+						}
+					},
+					toLightOn() {
+						if(test){
+							test.toLightOn();
+						}
+					},
+					toUserInfo() {
+						window.location.href = './userinfo.html';
+					},
 					toTrade() {
 						window.location.href = './trade.html';
 					},
@@ -139,7 +161,10 @@
 
 					// 登陆 
 					toGenEvent() {
-						api.genEvent({
+						if (test) {
+							test.toGenEvent();
+						}
+						/* api.genEvent({
 							data: {
 								'oid': this.mobileFzwno,
 								'eventType': 1,
@@ -154,7 +179,7 @@
 							}
 						}).catch((err) => {
 							layer.msg(err.msg);
-						});
+						}); */
 					},
 				},
 			});

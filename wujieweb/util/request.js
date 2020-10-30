@@ -17,6 +17,10 @@ const domain = "http://" + rootIp + ":9999";
 const api = {
 	rootIp: rootIp,
 	domain: domain,
+	getUserInfo(reqObj = {}) {
+		reqObj.url = domain + "/getUserInfo";
+		return yajax(reqObj);
+	},
 	deviceComp(reqObj = {}) {
 		reqObj.url = domain + "/deviceComp";
 		return yajax(reqObj);

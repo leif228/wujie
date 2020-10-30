@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="../../util/baseTop.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="../../component/layer/admin/admin.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/login/login.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+	</head>
+	<body layadmin-themealias="classic-black-header">
+		<div id="login" class="layui-fluid">
+			<div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login">
+				<div class="layadmin-user-login-main">
+					<div class="layadmin-user-login-box layadmin-user-login-header">
+						<h2>用户信息</h2>
+						<p>===================================</p>
+					</div>
+					<div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+						<div class="layui-form-item">
+							<textarea  cols="45" rows="12" v-model="msg"></textarea>
+						</div>
+
+						
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toIndex">主 页</button>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#login',
+				data: {
+					currIp: "",
+					preip: "",
+					preport: "",
+					loginfzwno: "",
+					fzwno: "",
+					owerip: "",
+					owerport: "",
+					owerfzwno: "",
+					userId: '',
+					userName: '',
+					passWord: '',
+					owerServerIp: '',
+					msg:'右\r右'
+				},
+				created() {
+					//如果没有这句代码，select中初始化会是空白的，默认选中就无法实现。。
+					// this.deviceSelected = this.deviceList[0].id;
+
+					var user = JSON.parse(localStorage.getItem("sessionToken"));
+					this.userId = user.id;
+					this.userName = user.userName;
+					this.passWord = user.passWord;
+					this.owerServerIp = user.owerIp;
+				},
+				mounted() {
+					let that = this;
+					this.toLogin();
+				},
+				methods: {
+					
+					toIndex() {
+						//获取选中的优惠券
+						window.location.href = './index.html';
+						// layer.msg(this.userSelected);
+					},
+					
+					// 登陆 
+					toLogin() {
+
+						api.getUserInfo({
+							data: {
+								'id': this.userId
+							}
+						}).then((res) => {
+							if (res.code == 0) {
+								this.msg = res.msg;
+								
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+
+				},
+			});
+		</script>
+	</body>
+</html>
