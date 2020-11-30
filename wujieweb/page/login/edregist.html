@@ -56,6 +56,33 @@
 							</select>
 						</div>
 
+						<div id="area_under">
+							<div class="layui-form-item">
+								<span>第一级:</span>
+								<input type="number" min="0" max="83" oninput="if(value>83)value=83" v-model="oneSum" name="oneSum" placeholder="0~83"
+								 style="height: 38px;width: 80px;">
+								<select v-model="onetabSelected" @change="getOnetabSelected" style="height: 38px;display: inline-block;width: max-content;">
+									<option :value="coupon.fzwStr" v-for="coupon in acsList">{{coupon.oneTab}}</option>
+								</select>
+							</div>
+							<div class="layui-form-item">
+								<span>第二级:</span>
+								<input type="number" min="-83" max="745" oninput="if(value>745)value=745" v-model="twoSum" name="twoSum"
+								 placeholder="-83~745" style="height: 38px;width: 80px;">
+								<select v-model="twotabSelected" @change="getTwotabSelected" style="height: 38px;display: inline-block;width: max-content;">
+									<option :value="coupon.fzwStr" v-for="coupon in acsList">{{coupon.twoTab}}</option>
+								</select>
+							</div>
+							<div class="layui-form-item">
+								<span>第三级:</span>
+								<input type="number" min="0" max="745" oninput="if(value>745)value=745" v-model="threeSum" name="threeSum"
+								 placeholder="0~745" style="height: 38px;width: 80px;">
+								<select v-model="threetabSelected" @change="getThreetabtabSelected" style="height: 38px;display: inline-block;width: max-content;">
+									<option :value="coupon.fzwStr" v-for="coupon in acsList">{{coupon.threeTab}}</option>
+								</select>
+							</div>
+						</div>
+
 						<div id="nodeDiv">
 							<div class="layui-form-item">
 								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
@@ -175,6 +202,16 @@
 					aSelected: '',
 					sList: [],
 					sSelected: '',
+					acsList: [],
+					onetabSelected: '',
+					twotabSelected: '',
+					threetabSelected: '',
+					oneSum: 0,
+					// oneTab: '',
+					twoSum: 0,
+					// twoTab: '',
+					threeSum: 0,
+					// threeTab: '',
 					pSort: 0,
 					cSort: 0,
 					aSort: 0,
@@ -195,9 +232,41 @@
 					let that = this;
 					// this.getChildNodes();
 					this.addrInit();
+					this.acsAll();
 					this.deviceType();
 				},
 				methods: {
+					acsAll() {
+						api.acsAll({
+							data: {}
+						}).then((res) => {
+							if (res.code == 0) {
+								if (res.data.length > 0) {
+									this.acsList = res.data;
+									this.onetabSelected = this.acsList[0].fzwStr;
+									this.twotabSelected = this.acsList[0].fzwStr;
+									this.threetabSelected = this.acsList[0].fzwStr;
+								}
+							}
+						}).catch((err) => {
+							layer.msg(err.msg);
+						});
+					},
+					getOnetabSelected() {
+						//获取选中的优惠券
+						console.log(this.onetabSelected)
+						// layer.msg(this.userSelected);
+					},
+					getTwotabSelected() {
+						//获取选中的优惠券
+						console.log(this.twotabSelected)
+						// layer.msg(this.userSelected);
+					},
+					getThreetabSelected() {
+						//获取选中的优惠券
+						console.log(this.threetabSelected)
+						// layer.msg(this.userSelected);
+					},
 					getChildNodes() {
 						api.getChildNodes({
 							data: {
@@ -425,6 +494,15 @@
 								return;
 							}
 						}
+						if (!this.oneSum) {
+							this.oneSum = 0;
+						}
+						if (!this.twoSum) {
+							this.twoSum = 0;
+						}
+						if (!this.threeSum) {
+							this.threeSum = 0;
+						}
 						//设置该请求不带token访问，绕过权限认证
 						localStorage.setItem("url_no_token", 0);
 						this.deviceRegistElse();
@@ -441,7 +519,13 @@
 								'pSort': this.pSort,
 								'cSort': this.cSort,
 								'aSort': this.aSort,
-								'sSort': this.sSort
+								'sSort': this.sSort,
+								'oneSum': this.oneSum,
+								'oneTab': this.onetabSelected,
+								'twoSum': this.twoSum,
+								'twoTab': this.twotabSelected,
+								'threeSum': this.threeSum,
+								'threeTab': this.threetabSelected
 							}
 						}).then((res) => {
 							if (res.code == 0) {
@@ -484,6 +568,10 @@
 									if (this.deviceSelected == 6)
 										test.toNetInfo(this.fzwno, this.userName, this.preip, this.preport, this.loginfzwno, this.owerip, this.owerport,
 											this.owerfzwno, this.passWord);
+									//注册为网关
+									if (this.deviceSelected == 7)
+										test.toNetInfo(this.fzwno, this.userName, this.preip, this.preport, this.loginfzwno, this.owerip, this.owerport,
+											this.owerfzwno, this.passWord);
 
 									//OID,Name,Identity,PhoneNum,Address,OwnerAddress,ServerIP,ServerPort,ServerOID,OwnerServerIP,OwnerServerPort,OwnerServerOID,PassNum,	
 								}
@@ -524,7 +612,7 @@
 									var hstr = bin2String(h);
 									console.log(hstr);
 									var l = buffer.slice(6, 8);
-									var len = byte2ToUnsignedShort(l,0);
+									var len = byte2ToUnsignedShort(l, 0);
 									console.log(len);
 									layer.msg(len);
 									var v = buffer.slice(8, 9);

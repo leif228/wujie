@@ -53,6 +53,10 @@ const api = {
 		reqObj.url = domain + "/preDeviceRegist";
 		return yajax(reqObj);
 	},
+	acsAll(reqObj = {}) {
+		reqObj.url = domain + "/acsAll";
+		return yajax(reqObj);
+	},
 	deviceRegistElse(reqObj = {}) {
 		reqObj.url = "http://" + reqObj.data.currIp + ":9999" + "/deviceRegistElse";
 		return yajax_notoken(reqObj);
