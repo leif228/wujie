@@ -53,6 +53,9 @@
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toTree">设备树</button>
 						</div>
+						<!-- <div class="layui-form-item">
+							<button clas="layui-btn layui-btn-fluid" @click="toNodeConn">节点连接</button>
+						</div> -->
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toNodeConn">节点连接</button>
 						</div>
@@ -77,16 +80,32 @@
 						<div class="layui-form-item">
 							<button class="layui-btn layui-btn-fluid" @click="toLightOff">关灯</button>
 						</div>
+						<div class="layui-form-item">
+							<button class="layui-btn layui-btn-fluid" @click="toSearchNet">搜索网关</button>
+						</div>
+					</div>
+					<div style="width: auto;height: 50px;">
+						<div v-for="(item,index) in messageList" :key="index" :id="item.ip" @click="toggle(item)" style="margin-top: 15px;height: 16px;">网关ip：{{item.ip}}(
+							{{item.netSearchNetTask.OID}} )</div>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 
 		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			new Vue({
+			var messageList = [{ //发送的消息格式
+				ip: '192.168.3.14', //发送类型
+				netSearchNetTask: {
+					Devtype: '007',
+					OID: '6455465454'
+				}
+			}];
+			var vueObj = new Vue({
 				el: '#login',
 				data: {
+					messageList: [],
 					verifyCode: null, // 验证码图片
 					username: '', // 用户名
 					userId: '',
@@ -110,13 +129,24 @@
 					// this.getVerifyCode();
 				},
 				methods: {
+					toggle(item) {
+						console.log(item);
+						if (test) {
+							test.toNetTcp(item.ip);
+						}
+					},
+					toSearchNet() {
+						if (test) {
+							test.toSearchNet();
+						}
+					},
 					toLightOff() {
-						if(test){
+						if (test) {
 							test.toLightOff();
 						}
 					},
 					toLightOn() {
-						if(test){
+						if (test) {
 							test.toLightOn();
 						}
 					},
@@ -183,6 +213,16 @@
 					},
 				},
 			});
+
+			function nets(nets) {
+				// alert(nets);
+				if (nets) {
+					var obj = JSON.parse(nets);
+					// alert(obj);
+					vueObj.messageList = obj;
+					// alert(vueObj.messageList.ip);
+				}
+			}
 		</script>
 	</body>
 </html>

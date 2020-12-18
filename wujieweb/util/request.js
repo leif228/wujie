@@ -10,7 +10,7 @@ document.write('<script src="../../util/graceChecker.js"></script>');
 
 
 
-const rootIp = "192.168.4.16";
+const rootIp = "192.168.4.15";
 const domain = "http://" + rootIp + ":9999";
 // const domain = "http://192.168.3.60:9999";
 
