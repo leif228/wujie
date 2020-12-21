@@ -83,6 +83,13 @@
 							</div>
 						</div>
 
+						<div class="layui-form-item" v-show="netsOperatingBool">
+							<span>选择注册网关:</span>
+							<select v-model="netSelected" @change="getNetSelected" style="height: 38px;display: inline-block;width: max-content;">
+								<option :value="coupon.ip" v-for="coupon in messageList">{{coupon.ip}}({{coupon.netSearchNetTask.OID}})</option>
+							</select>
+						</div>
+
 						<div id="nodeDiv">
 							<div class="layui-form-item">
 								<label class="layadmin-user-login-icon layui-icon layui-icon-about" for="LAY-user-login-deviceName"></label>
@@ -167,11 +174,13 @@
 
 		<script src="../../util/request.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			new Vue({
+			var vueObj = new Vue({
 				el: '#login',
 				data: {
 					// verifyCode: null, // 验证码图片
-
+					netSelected: '',
+					messageList:[],
+					netsOperatingBool:false,
 					operatingBool: false,
 					idcard: "",
 					currIp: "",
@@ -251,6 +260,12 @@
 						}).catch((err) => {
 							layer.msg(err.msg);
 						});
+					},
+					getNetSelected(){
+						console.log(this.netSelected);
+						if (test) {
+							test.toNetTcp(this.netSelected);
+						}
 					},
 					getOnetabSelected() {
 						//获取选中的优惠券
@@ -334,7 +349,7 @@
 					},
 					getDeviceSelected() {
 						//获取选中的优惠券
-						console.log(this.deviceSelected)
+						console.log(this.deviceSelected);
 						if (this.deviceSelected == 1 || this.deviceSelected == 2) {
 
 							var div = document.getElementById("nodeDiv")
@@ -342,6 +357,18 @@
 						} else {
 							var div = document.getElementById("nodeDiv")
 							div.style = 'display:none;';
+							
+							if(this.deviceSelected == 6 || this.deviceSelected == 7){
+								this.netsOperatingBool = true;
+								this.toSearchNet();
+							}else{
+								this.netsOperatingBool = false;
+							}
+						}
+					},
+					toSearchNet() {
+						if (test) {
+							test.toSearchNet();
 						}
 					},
 					getNodeSelected() {
@@ -938,6 +965,17 @@
 				var high = bytes[off + 1];
 				var low = bytes[off];
 				return (high << 8 & 0xFF00) | (low & 0xFF);
+			}
+			
+			function nets(nets) {
+				alert(nets);
+				if (nets) {
+					var obj = JSON.parse(nets);
+					alert(obj);
+					vueObj.messageList = obj;
+					vueObj.netSelected = obj[0].ip;
+					alert(obj[0].ip);
+				}
 			}
 		</script>
 	</body>
